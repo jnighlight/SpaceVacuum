@@ -1,0 +1,2702 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 6/7/2018 5:42:14 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :  Space Vacuum
+00000000                             3  * Written by :  Jacob Lites
+00000000                             4  * Date       :  10/18/2017
+00000000                             5  * Description:  Space Vacuum is a physics based arcade game in which you must keep asteroids from hitting the vacuum consuming the cosmos
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  ALL_REG                         REG D0-D7/A0-A6
+00000000                             8  
+00000000  =0000000C                  9  CIRCLE_SIZE                     EQU 12
+00000000                            10  
+00000000  =00000001                 11  SI_SHOOT                        EQU 1
+00000000  =00000002                 12  SF_MUSIC                        EQU 2
+00000000  =00000003                 13  SF_WIN                          EQU 3
+00000000  =00000004                 14  SF_LOSE                         EQU 4
+00000000  =00000005                 15  SF_HIT                          EQU 5
+00000000  =00000006                 16  FINAL_MUSIC                     EQU 6
+00000000  =00000007                 17  FINAL_SHOOT                     EQU 7
+00000000  =00000008                 18  FINAL_HIT                       EQU 8
+00000000  =00000009                 19  FINAL_WIN                       EQU 9
+00000000  =0000000A                 20  FINAL_LOSE                      EQU 10
+00000000  =0000000B                 21  SI_HIT                          EQU 11
+00000000                            22  
+00000000  =00000280                 23  A_SCREEN_X_SIZE                 EQU 640
+00000000  =000001E0                 24  A_SCREEN_Y_SIZE                 EQU 480
+00000000                            25  
+00000000  =00000044                 26  A_PLAY_X_START                  EQU 68
+00000000  =00000059                 27  A_PLAY_Y_START                  EQU 89
+00000000  =0000004A                 28  A_PLAY_X_START_OFFSET           EQU A_PLAY_X_START+(CIRCLE_SIZE/2)
+00000000  =0000005F                 29  A_PLAY_Y_START_OFFSET           EQU A_PLAY_Y_START+(CIRCLE_SIZE/2)
+00000000  =00000234                 30  A_PLAY_X_SIZE                   EQU 564
+00000000  =00000180                 31  A_PLAY_Y_SIZE                   EQU 384
+00000000  =0000015E                 32  A_FINAL_SCORE_X                 EQU A_PLAY_X_START+(A_PLAY_X_SIZE/2)
+00000000  =00000119                 33  A_FINAL_SCORE_Y                 EQU A_PLAY_Y_START+(A_PLAY_Y_SIZE/2)
+00000000  =00000278                 34  A_PLAY_X_END                    EQU A_PLAY_X_START+A_PLAY_X_SIZE
+00000000  =000001D9                 35  A_PLAY_Y_END                    EQU A_PLAY_Y_START+A_PLAY_Y_SIZE
+00000000  =0000026C                 36  A_PLAY_X_END_OFFSET             EQU A_PLAY_X_END-(CIRCLE_SIZE)
+00000000  =000001CD                 37  A_PLAY_Y_END_OFFSET             EQU A_PLAY_Y_END-(CIRCLE_SIZE)
+00000000  =000000B4                 38  A_VACUUM_OFFSET                 EQU A_PLAY_X_START+(A_PLAY_X_SIZE/5)
+00000000  =000001E5                 39  A_SCORE_X                       EQU 485
+00000000  =0000002D                 40  A_SCORE_Y                       EQU 45
+00000000  =00000163                 41  A_THRESHOLD_X                   EQU 355
+00000000  =0000002D                 42  A_THRESHOLD_Y                   EQU 45
+00000000  =0000010E                 43  A_BULLET_COUNT_X                EQU 270
+00000000  =0000002D                 44  A_BULLET_COUNT_Y                EQU 45
+00000000  =000001A0                 45  A_CIRCLE_SPEED                  EQU $01A0
+00000000  =00000200                 46  A_BULLET_SPEED                  EQU $0200
+00000000  =00000028                 47  A_ASTEROIDSIZE                  EQU 40
+00000000  =00000014                 48  A_HALF_ASTEROIDSIZE             EQU 20
+00000000  =00000005                 49  A_ASTEROID_HEALTH               EQU 5
+00000000                            50  
+00000000  =000002D0                 51  B_SCREEN_X_SIZE                 EQU 720
+00000000  =00000242                 52  B_SCREEN_Y_SIZE                 EQU 578
+00000000  =00000000                 53  B_PLAY_X_START                  EQU 0
+00000000  =00000000                 54  B_PLAY_Y_START                  EQU 0
+00000000  =00000006                 55  B_PLAY_X_START_OFFSET           EQU B_PLAY_X_START+(CIRCLE_SIZE/2)
+00000000  =00000006                 56  B_PLAY_Y_START_OFFSET           EQU B_PLAY_Y_START+(CIRCLE_SIZE/2)
+00000000  =00000244                 57  B_PLAY_X_SIZE                   EQU 580
+00000000  =00000242                 58  B_PLAY_Y_SIZE                   EQU 578
+00000000  =00000122                 59  B_FINAL_SCORE_X                 EQU B_PLAY_X_START+(B_PLAY_X_SIZE/2)
+00000000  =00000121                 60  B_FINAL_SCORE_Y                 EQU B_PLAY_Y_START+(B_PLAY_Y_SIZE/2)
+00000000  =00000244                 61  B_PLAY_X_END                    EQU B_PLAY_X_START+B_PLAY_X_SIZE
+00000000  =00000242                 62  B_PLAY_Y_END                    EQU B_PLAY_Y_START+B_PLAY_Y_SIZE
+00000000  =00000238                 63  B_PLAY_X_END_OFFSET             EQU B_PLAY_X_END-(CIRCLE_SIZE)
+00000000  =00000236                 64  B_PLAY_Y_END_OFFSET             EQU B_PLAY_Y_END-(CIRCLE_SIZE)
+00000000  =00000074                 65  B_VACUUM_OFFSET                 EQU B_PLAY_X_START+(B_PLAY_X_SIZE/5)
+00000000  =0000029C                 66  B_SCORE_X                       EQU 668
+00000000  =0000004B                 67  B_SCORE_Y                       EQU 75
+00000000  =00000294                 68  B_BULLET_COUNT_X                EQU 660
+00000000  =000001EF                 69  B_BULLET_COUNT_Y                EQU 495
+00000000  =0000026C                 70  B_THRESHOLD_X                   EQU 620
+00000000  =0000004B                 71  B_THRESHOLD_Y                   EQU 75
+00000000  =00000200                 72  B_CIRCLE_SPEED                  EQU $0200
+00000000  =00000300                 73  B_BULLET_SPEED                  EQU $0300
+00000000  =00000024                 74  B_ASTEROIDSIZE                  EQU 36
+00000000  =00000012                 75  B_HALF_ASTEROIDSIZE             EQU 18
+00000000  =00000006                 76  B_ASTEROID_HEALTH               EQU 6
+00000000                            77  
+00000000  =00000400                 78  C_SCREEN_X_SIZE                 EQU 1024
+00000000  =00000300                 79  C_SCREEN_Y_SIZE                 EQU 768
+00000000  =00000096                 80  C_PLAY_X_START                  EQU 150
+00000000  =00000000                 81  C_PLAY_Y_START                  EQU 0
+00000000  =0000009C                 82  C_PLAY_X_START_OFFSET           EQU C_PLAY_X_START+(CIRCLE_SIZE/2)
+00000000  =00000006                 83  C_PLAY_Y_START_OFFSET           EQU C_PLAY_Y_START+(CIRCLE_SIZE/2)
+00000000  =0000036A                 84  C_PLAY_X_SIZE                   EQU 874
+00000000  =00000300                 85  C_PLAY_Y_SIZE                   EQU 768
+00000000  =0000024B                 86  C_FINAL_SCORE_X                 EQU C_PLAY_X_START+(C_PLAY_X_SIZE/2)
+00000000  =00000180                 87  C_FINAL_SCORE_Y                 EQU C_PLAY_Y_START+(C_PLAY_Y_SIZE/2)
+00000000  =00000400                 88  C_PLAY_X_END                    EQU C_PLAY_X_START+C_PLAY_X_SIZE
+00000000  =00000300                 89  C_PLAY_Y_END                    EQU C_PLAY_Y_START+C_PLAY_Y_SIZE
+00000000  =000003F4                 90  C_PLAY_X_END_OFFSET             EQU C_PLAY_X_END-(CIRCLE_SIZE)
+00000000  =000002F4                 91  C_PLAY_Y_END_OFFSET             EQU C_PLAY_Y_END-(CIRCLE_SIZE)
+00000000  =00000144                 92  C_VACUUM_OFFSET                 EQU C_PLAY_X_START+(C_PLAY_X_SIZE/5)
+00000000  =00000078                 93  C_SCORE_X                       EQU 120
+00000000  =000002D0                 94  C_SCORE_Y                       EQU 720
+00000000  =00000019                 95  C_BULLET_COUNT_X                EQU 25
+00000000  =000002D0                 96  C_BULLET_COUNT_Y                EQU 720
+00000000  =00000046                 97  C_THRESHOLD_X                   EQU 70
+00000000  =000002D0                 98  C_THRESHOLD_Y                   EQU 720
+00000000  =00000240                 99  C_CIRCLE_SPEED                  EQU $0240
+00000000  =00000380                100  C_BULLET_SPEED                  EQU $0380
+00000000  =00000020                101  C_ASTEROIDSIZE                  EQU 32
+00000000  =00000010                102  C_HALF_ASTEROIDSIZE             EQU 16
+00000000  =00000007                103  C_ASTEROID_HEALTH               EQU 7
+00000000                           104  
+00000000  =00000500                105  D_SCREEN_X_SIZE                 EQU 1280
+00000000  =000002D0                106  D_SCREEN_Y_SIZE                 EQU 720
+00000000  =000000E6                107  D_PLAY_X_START                  EQU 230
+00000000  =00000000                108  D_PLAY_Y_START                  EQU 0
+00000000  =000000EC                109  D_PLAY_X_START_OFFSET           EQU D_PLAY_X_START+(CIRCLE_SIZE/2)
+00000000  =00000006                110  D_PLAY_Y_START_OFFSET           EQU D_PLAY_Y_START+(CIRCLE_SIZE/2)
+00000000  =000003EE                111  D_PLAY_X_SIZE                   EQU 1006
+00000000  =000002D0                112  D_PLAY_Y_SIZE                   EQU 720
+00000000  =000002DD                113  D_FINAL_SCORE_X                 EQU D_PLAY_X_START+(D_PLAY_X_SIZE/2)
+00000000  =00000168                114  D_FINAL_SCORE_Y                 EQU D_PLAY_Y_START+(D_PLAY_Y_SIZE/2)
+00000000  =000004D4                115  D_PLAY_X_END                    EQU D_PLAY_X_START+D_PLAY_X_SIZE
+00000000  =000002D0                116  D_PLAY_Y_END                    EQU D_PLAY_Y_START+D_PLAY_Y_SIZE
+00000000  =000004C8                117  D_PLAY_X_END_OFFSET             EQU D_PLAY_X_END-(CIRCLE_SIZE)
+00000000  =000002C4                118  D_PLAY_Y_END_OFFSET             EQU D_PLAY_Y_END-(CIRCLE_SIZE)
+00000000  =000001AF                119  D_VACUUM_OFFSET                 EQU D_PLAY_X_START+(D_PLAY_X_SIZE/5)
+00000000  =000004C4                120  D_SCORE_X                       EQU 1220
+00000000  =0000002D                121  D_SCORE_Y                       EQU 45
+00000000  =000004C4                122  D_BULLET_COUNT_X                EQU 1220
+00000000  =00000258                123  D_BULLET_COUNT_Y                EQU 600
+00000000  =000004C4                124  D_THRESHOLD_X                   EQU 1220
+00000000  =00000163                125  D_THRESHOLD_Y                   EQU 355
+00000000  =00000280                126  D_CIRCLE_SPEED                  EQU $0280
+00000000  =00000400                127  D_BULLET_SPEED                  EQU $0400
+00000000  =0000001E                128  D_ASTEROIDSIZE                  EQU 30
+00000000  =0000000F                129  D_HALF_ASTEROIDSIZE             EQU 15
+00000000  =00000008                130  D_ASTEROID_HEALTH               EQU 8
+00000000                           131  
+00000000  =00000011                132  ENABLE_DOUBLE_BUFFER_CODE       EQU 17
+00000000                           133  
+00000000  =00000021                134  OUTPUT_WINDOW_TRAP_CODE         EQU 33
+00000000  =00000001                135  NOT_FULL_SCREEN_SETTING_NUM     EQU 1
+00000000  =00000002                136  FULL_SCREEN_SETTING_NUM         EQU 2
+00000000                           137  
+00000000  =00000008                138  GET_TIME_TRAP_CODE              EQU 8
+00000000  =00000017                139  DELAY_TIME_TRAP_CODE            EQU 23
+00000000                           140  
+00000000  =0000003D                141  GET_MOUSE_LOC_TRAP_CODE         EQU 61
+00000000                           142  
+00000000  =00000050                143  SET_PEN_COLOR_TRAP_CODE         EQU 80
+00000000  =00000051                144  SET_FILL_COLOR_TRAP_CODE        EQU 81
+00000000  =00000057                145  DRAW_FILLED_RECT_TRAP_CODE      EQU 87
+00000000  =00000058                146  DRAW_FILLED_ELLIPSE_TRAP_CODE   EQU 88
+00000000  =0000005B                147  DRAW_ELLIPSE_TRAP_CODE          EQU 91
+00000000                           148  
+00000000  =0000005C                149  SET_DRAW_MODE_TRAP_CODE         EQU 92
+00000000  =0000005E                150  DRAW_TO_SCREEN_TRAP_CODE        EQU 94
+00000000                           151  
+00000000                           152  
+00000000  =000E003E                153  MAROON                          EQU $000E003E
+00000000  =000000FF                154  RED                             EQU $000000FF
+00000000  =00FF0000                155  BLUE                            EQU $00FF0000
+00000000  =005E0E00                156  DARKBLUE                        EQU $005E0E00
+00000000  =0000FF00                157  GREEN                           EQU $0000FF00
+00000000  =000E3E00                158  DARKGREEN                       EQU $000E3E00
+00000000  =0000F2FF                159  YELLOW                          EQU $0000F2FF
+00000000  =00003F34                160  DARKYELLOW                      EQU $00003F34
+00000000  =00FFFFFF                161  WHITE                           EQU $00FFFFFF
+00000000  =00000000                162  BLACK                           EQU $00000000
+00000000  =00666666                163  GREY                            EQU $00666666
+00000000                           164  
+00000000  =00000000                165  BULLET_X                        EQU 0
+00000000  =00000004                166  BULLET_Y                        EQU 4
+00000000  =00000008                167  BULLET_SIZE_IN_MEMORY           EQU 8
+00000000  =00000007                168  BULLET_COUNT                    EQU 7
+00000000                           169  
+00000000  =00000000                170  ASTEROID_X                      EQU 0
+00000000  =00000004                171  ASTEROID_Y                      EQU 4
+00000000  =00000008                172  ASTEROID_X_VELOCITY             EQU 8
+00000000  =0000000C                173  ASTEROID_Y_VELOCITY             EQU 12
+00000000  =00000010                174  ASTEROID_HEALTH                 EQU 16
+00000000  =00000014                175  ASTEROID_SIZE_IN_MEMORY         EQU 20
+00000000  =00000006                176  MAX_ASTEROID_COUNT              EQU 6
+00000000                           177  
+00001000                           178      ORG    $1000
+00001000                           179  START:
+00001000                           180      
+00001000  4EB9 00002408            181      jsr     loadSounds          ;Loading sounds into directX Audio player
+00001006  4EB9 00F7CBD4            182      jsr     seedRandomNumber    ;Priming the pump
+0000100C  7021                     183      move.l  #OUTPUT_WINDOW_TRAP_CODE,d0
+0000100E  323C 0280                184      move.w  #A_SCREEN_X_SIZE,d1
+00001012  4841                     185      swap    d1
+00001014  323C 01E0                186      move.w  #A_SCREEN_Y_SIZE,d1
+00001018  4E4F                     187      trap #15
+0000101A                           188      
+0000101A                           189      ;POPULATING CIRCLE_SIZE DATA
+0000101A  700C                     190      move.l  #CIRCLE_SIZE,d0
+0000101C  E208                     191      lsr.b   #1,d0
+0000101E  23C0 00002542            192      move.l  d0,halfCircleSize
+00001024  4EB9 0000148A            193      jsr     setDoubleBufferMode
+0000102A                           194  
+0000102A  4EB9 00002336            195      jsr     startLevel
+00001030                           196  
+00001030                           197  
+00001030                           198  ;Main game loop. Updates time, then calculates the state for the given frame
+00001030                           199  loop:
+00001030  4EB9 00001408            200      jsr updateTimeSinceLastLoop
+00001036  4EB9 00001428            201      jsr updateInput
+0000103C  4EB9 0000107A            202      jsr updateElements
+00001042  4EB9 0000109A            203      jsr drawElements
+00001048  4EB9 00001058            204      jsr removeElements
+0000104E  4EB9 00001A46            205      jsr checkForLevelEnd
+00001054                           206  
+00001054  4EF8 1030                207      jmp loop
+00001058                           208  
+00001058                           209  ;Element removal step. Removes all drawn elements from the draw step of the game loop
+00001058                           210  removeElements:
+00001058  7200                     211      moveq   #0,d1
+0000105A  4EB9 0000147E            212      jsr setPenColor
+00001060  4EB9 00001484            213      jsr setFillColor
+00001066  4EB9 00001460            214      jsr removeCircle
+0000106C  4EB9 000011EE            215      jsr removeBullets
+00001072  4EB9 0000151A            216      jsr removeAsteroids
+00001078  4E75                     217      rts
+0000107A                           218  
+0000107A                           219  ;Updating logical representation of the elements in memory. Includes physics updates and collisions
+0000107A                           220  updateElements:
+0000107A  4EB9 00001246            221      jsr updateCircleLocation
+00001080  4EB9 000010F4            222      jsr spawnBulletIfPossible
+00001086  4EB9 00001158            223      jsr updateBulletLocation
+0000108C  4EB9 0000163E            224      jsr updateAsteroidLocation
+00001092  4EB9 0000174A            225      jsr checkForAsteroidBulletCollision
+00001098  4E75                     226      rts
+0000109A                           227  
+0000109A                           228  ;Draws all elements after their state has been updated.
+0000109A                           229  drawElements:
+0000109A  223C 00FFFFFF            230      move.l  #WHITE,d1
+000010A0  4EB9 0000147E            231      jsr     setPenColor
+000010A6  4EB9 00001484            232      jsr     setFillColor
+000010AC                           233  
+000010AC  2C79 00E9B870            234      move.l  curDrawShipFunction,a6      ;Can set the draw function based on current arcade cabinet
+000010B2  4E96                     235      jsr     (a6)
+000010B4  4EB9 000011A6            236      jsr     drawBullets 
+000010BA                           237  
+000010BA  223C 00666666            238      move.l  #GREY,d1
+000010C0  4EB9 0000147E            239      jsr     setPenColor
+000010C6  4EB9 00001484            240      jsr     setFillColor
+000010CC                           241  
+000010CC  2C79 00E9B874            242      move.l  curDrawAsteroidFunction,a6  ;Can set the draw function based on current arcade cabinet
+000010D2  4E96                     243      jsr     (a6)
+000010D4                           244  
+000010D4  4EB9 0000198E            245      jsr     drawVacuumLine
+000010DA  4EB9 00001958            246      jsr     drawScore
+000010E0  4EB9 000018DE            247      jsr     drawBulletCount
+000010E6  4EB9 00001914            248      jsr     drawThresholdCount
+000010EC  4EB9 00001492            249      jsr     drawBufferToScreen
+000010F2  4E75                     250      rts
+000010F4                           251  
+000010F4                           252  ;Function to check if there are any free spaces into which to spawn a bullet
+000010F4                           253  spawnBulletIfPossible:
+000010F4  1039 00002630            254      move.b  spawnBullet,d0
+000010FA  6700 005A                255      beq     finishBulletSpawn
+000010FE  13FC 0000 00002630       256      move.b  #0,spawnBullet
+00001106  7E00                     257      moveq   #0,d7
+00001108  7C07                     258      moveq   #BULLET_COUNT,d6
+0000110A                           259  findEmptyBulletSpaceLoop:
+0000110A  41F9 00002550            260      lea     bullet,a0
+00001110  2030 7000                261      move.l  (a0,d7.w),d0
+00001114  6600 003A                262      bne     nextFindEmptyBulletLoopIter     ;Moves to the next iteration if this one is taken, IE not zero
+00001118                           263                                              ;We got here, that means this one is NOT taken. Populate it, get out of the loop
+00001118  4EB9 0000238C            264      jsr     playShoot
+0000111E  D1C7                     265      add.l   d7,a0                           ;Move the A0 register to point to our new bullet
+00001120  2039 00002536            266      move.l  circleXLocation,d0
+00001126  2239 00002542            267      move.l  halfCircleSize,d1
+0000112C  E189                     268      lsl.l   #8,d1
+0000112E  E389                     269      lsl.l   #1,d1
+00001130  D081                     270      add.l   d1,d0
+00001132  2140 0000                271      move.l  d0,BULLET_X(a0)
+00001136                           272  
+00001136  2039 0000253A            273      move.l  circleYLocation,d0
+0000113C  2239 00002542            274      move.l  halfCircleSize,d1
+00001142  E189                     275      lsl.l   #8,d1
+00001144  D081                     276      add.l   d1,d0
+00001146  2140 0004                277      move.l  d0,BULLET_Y(a0)
+0000114A  4EF9 00001156            278      jmp     finishBulletSpawn
+00001150                           279  nextFindEmptyBulletLoopIter:
+00001150  5047                     280      add.w   #BULLET_SIZE_IN_MEMORY,d7
+00001152  5306                     281      sub.b   #1,d6
+00001154  66B4                     282      bne     findEmptyBulletSpaceLoop
+00001156                           283  finishBulletSpawn:
+00001156  4E75                     284      rts 
+00001158                           285  
+00001158                           286  updateBulletLocation:
+00001158  41F9 00002550            287      lea     bullet,a0
+0000115E  7C07                     288      moveq   #BULLET_COUNT,d6    
+00001160                           289  bulletUpdateLoop:
+00001160  0CA8 00000000 0000       290      cmp.l   #0,BULLET_X(a0)         ;Means bullet is not in use
+00001168  6700 0034                291      beq     updateBulletNextIter
+0000116C  2228 0000                292      move.l  BULLET_X(a0),d1
+00001170                           293  
+00001170                           294      ;Mult by current deltaTime
+00001170  2639 0000263A            295      move.l  bulletSpeed,d3
+00001176  C7F9 00002642            296      muls.w  deltaTime,d3
+0000117C  D283                     297      add.l   d3,d1
+0000117E                           298  
+0000117E  2401                     299      move.l  d1,d2
+00001180  E08A                     300      lsr.l   #8,d2
+00001182  B4B9 00E9B860            301      cmp.l   playXEnd,d2
+00001188  6F00 0010                302      ble     saveNewBulletLoc
+0000118C  217C 00000000 0000       303      move.l  #0,BULLET_X(a0)
+00001194  4EF9 0000119E            304      jmp     updateBulletNextIter
+0000119A                           305  saveNewBulletLoc:
+0000119A  2141 0000                306      move.l  d1,BULLET_X(a0)
+0000119E                           307  updateBulletNextIter:
+0000119E  5088                     308      add.l   #BULLET_SIZE_IN_MEMORY,a0
+000011A0  5306                     309      sub.b   #1,d6
+000011A2  66BC                     310      bne     bulletUpdateLoop
+000011A4  4E75                     311      rts
+000011A6                           312  
+000011A6                           313  drawBullets:
+000011A6  23FC 00000000 000028D4   314      move.l  #0,currentBullets
+000011B0  41F9 00002550            315      lea     bullet,a0
+000011B6  7C07                     316      moveq   #BULLET_COUNT,d6
+000011B8                           317  drawBulletLoop:
+000011B8  2228 0000                318      move.l  BULLET_X(a0),d1
+000011BC  B2BC 00000000            319      cmp.l   #0,d1
+000011C2  6700 001C                320      beq     dontDrawThisBullet
+000011C6  2428 0004                321      move.l  BULLET_Y(a0),d2
+000011CA                           322  
+000011CA                           323      ;Drawing bullet
+000011CA  E08A                     324      lsr.l   #8,d2
+000011CC  E089                     325      lsr.l   #8,d1
+000011CE  7057                     326      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+000011D0  7601                     327      moveq   #1,d3
+000011D2  D681                     328      add.l   d1,d3
+000011D4  7801                     329      moveq   #1,d4
+000011D6  D882                     330      add.l   d2,d4
+000011D8  4E4F                     331      trap    #15
+000011DA  4EF9 000011E6            332      jmp     nextBulletDrawIter
+000011E0                           333  
+000011E0                           334  dontDrawThisBullet:
+000011E0  52B9 000028D4            335      add.l   #1,currentBullets
+000011E6                           336  nextBulletDrawIter:
+000011E6  5088                     337      add.l   #BULLET_SIZE_IN_MEMORY,a0
+000011E8  5306                     338      sub.b   #1,d6
+000011EA  66CC                     339      bne     drawBulletLoop
+000011EC                           340  drawBulletEnd:
+000011EC  4E75                     341      rts
+000011EE                           342  
+000011EE                           343  removeBullets:
+000011EE  41F9 00002550            344      lea     bullet,a0
+000011F4  7C07                     345      moveq   #BULLET_COUNT,d6
+000011F6                           346  removeBulletLoop:
+000011F6  2228 0000                347      move.l  BULLET_X(a0),d1
+000011FA  B2BC 00000000            348      cmp.l   #$0,d1
+00001200  6700 0016                349      beq     removeBulletEnd
+00001204  2428 0004                350      move.l  BULLET_Y(a0),d2
+00001208                           351  
+00001208                           352      ;Drawing bullet
+00001208  E08A                     353      lsr.l   #8,d2
+0000120A  E089                     354      lsr.l   #8,d1
+0000120C  7057                     355      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+0000120E  7601                     356      moveq   #1,d3
+00001210  D681                     357      add.l   d1,d3
+00001212  7801                     358      moveq   #1,d4
+00001214  D882                     359      add.l   d2,d4
+00001216  4E4F                     360      trap    #15
+00001218                           361  removeBulletEnd:
+00001218  5088                     362      add.l   #BULLET_SIZE_IN_MEMORY,a0
+0000121A  5306                     363      sub.b   #1,d6
+0000121C  66D8                     364      bne     removeBulletLoop
+0000121E  4E75                     365      rts
+00001220                           366  
+00001220                           367  resetCircleLocation:
+00001220  2039 00E9B85C            368      move.l  playYSize,d0
+00001226  E288                     369      lsr.l   #1,d0
+00001228  D0B9 00E9B854            370      add.l   playYStartOffset,d0
+0000122E  E188                     371      lsl.l   #8,d0
+00001230                           372  
+00001230  2239 00E9B850            373      move.l  playXStartOffset,d1
+00001236  E189                     374      lsl.l   #8,d1
+00001238                           375  
+00001238  23C0 0000253A            376      move.l  d0,circleYLocation
+0000123E  23C1 00002536            377      move.l  d1,circleXLocation
+00001244  4E75                     378      rts
+00001246                           379      
+00001246                           380  
+00001246                           381  updateCircleLocation:
+00001246  2639 00002542            382      move.l  halfCircleSize,d3
+0000124C  3239 0000254A            383      move.w  mouseXLocation,d1
+00001252  48C1                     384      ext.l   d1
+00001254                           385  
+00001254                           386      ;CHECKING LOWER X BOUNDARY
+00001254  B2B9 00E9B850            387      cmp.l   playXStartOffset,d1
+0000125A  6E00 000E                388      bgt     .notOutOfX
+0000125E  2239 00E9B850            389      move.l  playXStartOffset,d1
+00001264  4EF9 00001286            390      jmp     .xAdjDone
+0000126A                           391  .notOutOfX:
+0000126A                           392  
+0000126A                           393      ;CHECKING HIGHER X BOUNDARY
+0000126A  2A39 0000295A            394      move.l  currentVacuumLineX,d5
+00001270  0485 0000000C            395      sub.l   #CIRCLE_SIZE,d5
+00001276  B285                     396      cmp.l   d5,d1
+00001278  6D00 000A                397      blt     .notOutOfXU
+0000127C  2205                     398      move.l  d5,d1
+0000127E  4EF9 00001286            399      jmp     .xAdjDone
+00001284                           400  .notOutOfXU:
+00001284  9283                     401      sub.l   d3,d1
+00001286                           402  
+00001286                           403  .xAdjDone:
+00001286                           404  
+00001286  3439 0000254C            405      move.w  mouseYLocation,d2
+0000128C  48C2                     406      ext.l   d2
+0000128E                           407  
+0000128E                           408      ;CHECKING LOWER Y BOUNDARY
+0000128E  B4B9 00E9B854            409      cmp.l   playYStartOffset,d2
+00001294  6E00 000E                410      bgt     .notOutOfY
+00001298  2439 00E9B854            411      move.l  playYStartOffset,d2
+0000129E  4EF9 000012BC            412      jmp     .yAdjDone
+000012A4                           413  .notOutOfY:
+000012A4                           414  
+000012A4                           415      ;CHECKING HIGHER Y BOUNDARY
+000012A4  B4B9 00E9B86C            416      cmp.l   playYEndOffset,d2
+000012AA  6D00 000E                417      blt     .notOutOfYU
+000012AE  2439 00E9B86C            418      move.l  playYEndOffset,d2
+000012B4  4EF9 000012BC            419      jmp     .yAdjDone
+000012BA                           420  .notOutOfYU:
+000012BA  9483                     421      sub.l   d3,d2
+000012BC                           422  
+000012BC                           423  .yAdjDone:
+000012BC                           424  
+000012BC  E189                     425      lsl.l   #8,d1
+000012BE  E18A                     426      lsl.l   #8,d2
+000012C0  2639 00002536            427      move.l  circleXLocation,d3
+000012C6  2839 0000253A            428      move.l  circleYLocation,d4
+000012CC                           429  
+000012CC                           430      ;If we're within 10 X or Y pixels of the mouse cursor, don't update. Otherwise we overshoot and get jerky movement
+000012CC  2A01                     431      move.l  d1,d5
+000012CE  9A83                     432      sub.l   d3,d5
+000012D0  6A00 0004                433      bpl     .validXCheck
+000012D4  4485                     434      neg.l   d5
+000012D6                           435  .validXCheck
+000012D6  2C02                     436      move.l  d2,d6
+000012D8  9C84                     437      sub.l   d4,d6
+000012DA  6A00 0004                438      bpl     .validYCheck
+000012DE  4486                     439      neg.l   d6
+000012E0                           440  .validYCheck
+000012E0  DC85                     441      add.l   d5,d6
+000012E2  7A0A                     442      move.l  #10,d5
+000012E4  E18D                     443      lsl.l   #8,d5
+000012E6  BC85                     444      cmp.l   d5,d6
+000012E8  6D00 003A                445      blt     dontMove
+000012EC                           446  
+000012EC                           447      ;At this point:
+000012EC                           448      ;D1 has mouse x
+000012EC                           449      ;D2 has mouse y
+000012EC                           450      ;D3 has cur circle x
+000012EC                           451      ;D4 has cur circle y
+000012EC                           452      ;D5 will have x vel
+000012EC                           453      ;D6 will have y vel
+000012EC                           454      ;D0 is saved for calcs/trap codes
+000012EC                           455      
+000012EC  2A39 00002546            456      move.l  circleSpeed,d5
+000012F2  B681                     457      cmp.l   d1,d3
+000012F4  6F00 0004                458      ble     dontNegateX
+000012F8  4485                     459      neg.l   d5
+000012FA                           460  dontNegateX:
+000012FA  CBF9 00002642            461      muls.w  deltaTime,d5
+00001300  D685                     462      add.l   d5,d3
+00001302                           463  
+00001302  2C39 00002546            464      move.l  circleSpeed,d6
+00001308  B882                     465      cmp.l   d2,d4
+0000130A  6F00 0004                466      ble     dontNegateY
+0000130E  4486                     467      neg.l   d6
+00001310                           468  dontNegateY:
+00001310  CDF9 00002642            469      muls.w  deltaTime,d6
+00001316  D886                     470      add.l   d6,d4
+00001318                           471  
+00001318  23C3 00002536            472      move.l  d3,circleXLocation
+0000131E  23C4 0000253A            473      move.l  d4,circleYLocation
+00001324                           474  dontMove:
+00001324  4E75                     475      rts
+00001326                           476  
+00001326                           477  drawShip:
+00001326  2239 00002536            478      move.l  circleXLocation,d1
+0000132C  2439 0000253A            479      move.l  circleYLocation,d2
+00001332  E089                     480      lsr.l   #8,d1
+00001334  E08A                     481      lsr.l   #8,d2
+00001336                           482  
+00001336  760C                     483      moveq   #CIRCLE_SIZE,d3
+00001338  780C                     484      moveq   #CIRCLE_SIZE,d4
+0000133A  D882                     485      add.l   d2,d4
+0000133C  D681                     486      add.l   d1,d3
+0000133E                           487      
+0000133E  7058                     488      moveq   #DRAW_FILLED_ELLIPSE_TRAP_CODE,d0
+00001340  4E4F                     489      trap    #15
+00001342  4E75                     490      rts
+00001344                           491  
+00001344                           492  drawLevel2Ship:
+00001344  2239 00002536            493      move.l  circleXLocation,d1
+0000134A  2439 0000253A            494      move.l  circleYLocation,d2
+00001350  E089                     495      lsr.l   #8,d1
+00001352  E08A                     496      lsr.l   #8,d2
+00001354                           497  
+00001354  760C                     498      moveq   #CIRCLE_SIZE,d3
+00001356  780C                     499      moveq   #CIRCLE_SIZE,d4
+00001358  D882                     500      add.l   d2,d4
+0000135A  D681                     501      add.l   d1,d3
+0000135C                           502      
+0000135C  7058                     503      moveq   #DRAW_FILLED_ELLIPSE_TRAP_CODE,d0
+0000135E  4E4F                     504      trap    #15
+00001360  2A01                     505      move.l  d1,d5
+00001362                           506  
+00001362  223C 000000FF            507      move.l  #RED,d1
+00001368  4EB9 0000147E            508      jsr     setPenColor
+0000136E  4EB9 00001484            509      jsr     setFillColor
+00001374  2205                     510      move.l  d5,d1
+00001376  0681 0000000C            511      add.l   #CIRCLE_SIZE,d1
+0000137C  5D81                     512      sub.l   #6,d1
+0000137E  5482                     513      add.l   #2,d2
+00001380                           514  
+00001380  0484 0000000C            515      sub.l   #CIRCLE_SIZE,d4
+00001386  5A84                     516      add.l   #5,d4
+00001388  5983                     517      sub.l   #4,d3
+0000138A  7057                     518      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+0000138C  4E4F                     519      trap    #15
+0000138E                           520  
+0000138E  5C82                     521      add.l   #6,d2
+00001390  5C84                     522      add.l   #6,d4
+00001392  7057                     523      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+00001394  4E4F                     524      trap    #15
+00001396                           525  
+00001396  223C 00FFFFFF            526      move.l  #WHITE,d1
+0000139C  4EB9 0000147E            527      jsr     setPenColor
+000013A2  4EB9 00001484            528      jsr     setFillColor
+000013A8  4E75                     529      rts
+000013AA                           530  
+000013AA                           531  drawLevel3Ship:
+000013AA  2239 00002536            532      move.l  circleXLocation,d1
+000013B0  2439 0000253A            533      move.l  circleYLocation,d2
+000013B6  E089                     534      lsr.l   #8,d1
+000013B8  E08A                     535      lsr.l   #8,d2
+000013BA                           536  
+000013BA  760C                     537      moveq   #CIRCLE_SIZE,d3
+000013BC  780C                     538      moveq   #CIRCLE_SIZE,d4
+000013BE  D882                     539      add.l   d2,d4
+000013C0  D681                     540      add.l   d1,d3
+000013C2                           541      
+000013C2  7058                     542      moveq   #DRAW_FILLED_ELLIPSE_TRAP_CODE,d0
+000013C4  4E4F                     543      trap    #15
+000013C6  2A01                     544      move.l  d1,d5
+000013C8                           545  
+000013C8  7200                     546      move.l  #BLACK,d1
+000013CA  4EB9 0000147E            547      jsr     setPenColor
+000013D0  4EB9 00001484            548      jsr     setFillColor
+000013D6  2205                     549      move.l  d5,d1
+000013D8  0681 0000000C            550      add.l   #CIRCLE_SIZE,d1
+000013DE  5D81                     551      sub.l   #6,d1
+000013E0                           552  
+000013E0  0484 0000000C            553      sub.l   #CIRCLE_SIZE,d4
+000013E6  5A84                     554      add.l   #5,d4
+000013E8  7057                     555      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+000013EA  4E4F                     556      trap    #15
+000013EC                           557  
+000013EC  5082                     558      add.l   #8,d2
+000013EE  5084                     559      add.l   #8,d4
+000013F0  7057                     560      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+000013F2  4E4F                     561      trap    #15
+000013F4                           562  
+000013F4  223C 00FFFFFF            563      move.l  #WHITE,d1
+000013FA  4EB9 0000147E            564      jsr     setPenColor
+00001400  4EB9 00001484            565      jsr     setFillColor
+00001406  4E75                     566      rts
+00001408                           567  
+00001408                           568  updateTimeSinceLastLoop:
+00001408  7017                     569      moveq   #DELAY_TIME_TRAP_CODE,d0
+0000140A  7202                     570      moveq   #2,d1
+0000140C  4E4F                     571      trap    #15
+0000140E  7008                     572      moveq   #GET_TIME_TRAP_CODE,d0
+00001410  4E4F                     573      trap    #15
+00001412  2439 0000263E            574      move.l  lastIterTime,d2
+00001418  23C1 0000263E            575      move.l  d1,lastIterTime
+0000141E  9282                     576      sub.l   d2,d1
+00001420                           577      ;bne        deltaTimeNotZero
+00001420                           578      ;moveq  #1,d1
+00001420                           579  deltaTimeNotZero:
+00001420  33C1 00002642            580      move.w  d1,deltaTime
+00001426  4E75                     581      rts
+00001428                           582      
+00001428                           583  updateInput:
+00001428  703D                     584      moveq   #GET_MOUSE_LOC_TRAP_CODE,d0
+0000142A  7200                     585      moveq   #0,d1
+0000142C  4E4F                     586      trap    #15
+0000142E                           587      ;Getting mouse Location
+0000142E  33C1 0000254A            588      move.w  d1,mouseXLocation
+00001434  4841                     589      swap    d1
+00001436  33C1 0000254C            590      move.w  d1,mouseYLocation
+0000143C                           591      ;Getting mouse down state
+0000143C  C03C 0002                592      and.b   #2,d0
+00001440  E208                     593      lsr.b   #1,d0
+00001442  7200                     594      moveq   #0,d1
+00001444  1239 0000254E            595      move.b  (mouseDown),d1
+0000144A  B041                     596      cmp     d1,d0
+0000144C  6F00 000A                597      ble     dontSpawnBullet
+00001450  13FC 0001 00002630       598      move.b  #1,spawnBullet
+00001458                           599  dontSpawnBullet:
+00001458  13C0 0000254E            600      move.b  d0,(mouseDown)
+0000145E  4E75                     601      rts
+00001460                           602      
+00001460                           603  removeCircle:
+00001460  2239 00002536            604      move.l  (circleXLocation),d1
+00001466  2439 0000253A            605      move.l  (circleYLocation),d2
+0000146C  E089                     606      lsr.l   #8,d1
+0000146E  E08A                     607      lsr.l   #8,d2
+00001470  760C                     608      moveq   #CIRCLE_SIZE,d3
+00001472  D681                     609      add.l   d1,d3
+00001474  780C                     610      moveq   #CIRCLE_SIZE,d4
+00001476  D882                     611      add.l   d2,d4
+00001478  7057                     612      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+0000147A  4E4F                     613      trap    #15
+0000147C  4E75                     614      rts
+0000147E                           615  
+0000147E                           616  setPenColor:
+0000147E  7050                     617      moveq   #SET_PEN_COLOR_TRAP_CODE,d0
+00001480  4E4F                     618      trap    #15
+00001482  4E75                     619      rts
+00001484                           620  
+00001484                           621  setFillColor:
+00001484  7051                     622      moveq   #SET_FILL_COLOR_TRAP_CODE,d0
+00001486  4E4F                     623      trap    #15
+00001488  4E75                     624      rts
+0000148A                           625  
+0000148A                           626  setDoubleBufferMode:
+0000148A  705C                     627      moveq   #SET_DRAW_MODE_TRAP_CODE,d0
+0000148C  7211                     628      moveq   #ENABLE_DOUBLE_BUFFER_CODE,d1
+0000148E  4E4F                     629      trap    #15
+00001490  4E75                     630      rts
+00001492                           631  
+00001492                           632  drawBufferToScreen:
+00001492  705E                     633      moveq   #DRAW_TO_SCREEN_TRAP_CODE,d0
+00001494  4E4F                     634      trap    #15
+00001496  4E75                     635      rts
+00001498                           636  
+00001498                           637  spawnRandomAsteroid:
+00001498  7C00                     638      moveq   #0,d6
+0000149A  4EB9 00F7CBEC            639      jsr getRandomByteIntoD6
+000014A0  2239 00E9B860            640      move.l  playXEnd,d1
+000014A6  9286                     641      sub.l   d6,d1
+000014A8  E189                     642      lsl.l   #8,d1
+000014AA                           643  
+000014AA  4EB9 00F7CBEC            644      jsr getRandomByteIntoD6
+000014B0  2439 00E9B864            645      move.l  playYEnd,d2
+000014B6  9486                     646      sub.l   d6,d2
+000014B8  9486                     647      sub.l   d6,d2
+000014BA  E18A                     648      lsl.l   #8,d2
+000014BC                           649  
+000014BC  4EB9 00F7CBEC            650      jsr getRandomByteIntoD6
+000014C2  0486 0000007F            651      sub.l   #127,d6
+000014C8  2606                     652      move.l  d6,d3
+000014CA                           653  
+000014CA  4EB9 00F7CBEC            654      jsr getRandomByteIntoD6
+000014D0  0486 0000007F            655      sub.l   #127,d6
+000014D6  2806                     656      move.l  d6,d4
+000014D8  4EB9 000014E0            657      jsr spawnAsteroid
+000014DE  4E75                     658      rts
+000014E0                           659  
+000014E0                           660  ;When calling:
+000014E0                           661  ;D1 is x, Fixed point lsl 8
+000014E0                           662  ;D2 is y, Fixed point lsl 8
+000014E0                           663  ;D3 is xVel, Fixed point lsl 8
+000014E0                           664  ;D4 is yVel, Fixed point lsl 8
+000014E0                           665  spawnAsteroid:
+000014E0  41F9 00002644            666      lea     asteroids,a0
+000014E6  7E06                     667      moveq   #MAX_ASTEROID_COUNT,d7
+000014E8                           668  .loop:
+000014E8  2C28 0000                669      move.l  ASTEROID_X(a0),d6
+000014EC  6600 0020                670      bne     .continueLoop           ;Next loop iter if this asteroid's taken
+000014F0  2141 0000                671      move.l  d1,ASTEROID_X(a0)
+000014F4  2142 0004                672      move.l  d2,ASTEROID_Y(a0)
+000014F8  2143 0008                673      move.l  d3,ASTEROID_X_VELOCITY(a0)
+000014FC  2144 000C                674      move.l  d4,ASTEROID_Y_VELOCITY(a0)
+00001500  2179 0000282E 0010       675      move.l  levelAsteroidHealth,ASTEROID_HEALTH(a0)
+00001508  4EF9 00001518            676      jmp     .spawnedAsteroid
+0000150E                           677  .continueLoop
+0000150E  D1FC 00000014            678      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+00001514  5307                     679      sub.b   #1,d7
+00001516  66D0                     680      bne     .loop
+00001518                           681  .spawnedAsteroid
+00001518  4E75                     682      rts
+0000151A                           683  
+0000151A                           684  removeAsteroids:
+0000151A  41F9 00002644            685      lea     asteroids,a0
+00001520  7E06                     686      moveq   #MAX_ASTEROID_COUNT,d7
+00001522                           687  .loop:
+00001522  2228 0000                688      move.l  ASTEROID_X(a0),d1
+00001526  6700 0022                689      beq     .continueLoop           ;Don't draw if it's not populated
+0000152A  2428 0004                690      move.l  ASTEROID_Y(a0),d2
+0000152E                           691  
+0000152E  E081                     692      asr.l   #8,d1
+00001530  E082                     693      asr.l   #8,d2
+00001532                           694  
+00001532  7600                     695      moveq   #0,d3
+00001534  1639 00002824            696      move.b  curAsteroidSize,d3
+0000153A  7800                     697      moveq   #0,d4
+0000153C  1839 00002824            698      move.b  curAsteroidSize,d4
+00001542                           699  
+00001542  D681                     700      add.l   d1,d3
+00001544  D882                     701      add.l   d2,d4
+00001546                           702  
+00001546  7058                     703      moveq   #DRAW_FILLED_ELLIPSE_TRAP_CODE,d0
+00001548  4E4F                     704      trap    #15
+0000154A                           705  .continueLoop
+0000154A  D1FC 00000014            706      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+00001550  5307                     707      sub.b   #1,d7
+00001552  66CE                     708      bne     .loop
+00001554  4E75                     709      rts
+00001556                           710      
+00001556                           711  drawAsteroids:
+00001556  41F9 00002644            712      lea     asteroids,a0
+0000155C  7E06                     713      moveq   #MAX_ASTEROID_COUNT,d7
+0000155E                           714  .loop:
+0000155E  2228 0000                715      move.l  ASTEROID_X(a0),d1
+00001562  6700 0022                716      beq     .continueLoop           ;Don't draw if it's not populated
+00001566  2428 0004                717      move.l  ASTEROID_Y(a0),d2
+0000156A                           718  
+0000156A  E081                     719      asr.l   #8,d1
+0000156C  E082                     720      asr.l   #8,d2
+0000156E                           721  
+0000156E  7600                     722      moveq   #0,d3
+00001570  1639 00002824            723      move.b  curAsteroidSize,d3
+00001576  7800                     724      moveq   #0,d4
+00001578  1839 00002824            725      move.b  curAsteroidSize,d4
+0000157E                           726  
+0000157E  D681                     727      add.l   d1,d3
+00001580  D882                     728      add.l   d2,d4
+00001582                           729  
+00001582  705B                     730      moveq   #DRAW_ELLIPSE_TRAP_CODE,d0
+00001584  4E4F                     731      trap    #15
+00001586                           732  .continueLoop
+00001586  D1FC 00000014            733      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+0000158C  5307                     734      sub.b   #1,d7
+0000158E  66CE                     735      bne     .loop
+00001590  4E75                     736      rts
+00001592                           737  
+00001592                           738  drawLevel2Asteroids:
+00001592  41F9 00002644            739      lea     asteroids,a0
+00001598  7E06                     740      moveq   #MAX_ASTEROID_COUNT,d7
+0000159A                           741  .loop:
+0000159A  2228 0000                742      move.l  ASTEROID_X(a0),d1
+0000159E  6700 0022                743      beq     .continueLoop           ;Don't draw if it's not populated
+000015A2  2428 0004                744      move.l  ASTEROID_Y(a0),d2
+000015A6                           745  
+000015A6  E081                     746      asr.l   #8,d1
+000015A8  E082                     747      asr.l   #8,d2
+000015AA                           748  
+000015AA  7600                     749      moveq   #0,d3
+000015AC  1639 00002824            750      move.b  curAsteroidSize,d3
+000015B2  7800                     751      moveq   #0,d4
+000015B4  1839 00002824            752      move.b  curAsteroidSize,d4
+000015BA                           753  
+000015BA  D681                     754      add.l   d1,d3
+000015BC  D882                     755      add.l   d2,d4
+000015BE                           756  
+000015BE  7058                     757      moveq   #DRAW_FILLED_ELLIPSE_TRAP_CODE,d0
+000015C0  4E4F                     758      trap    #15
+000015C2                           759  .continueLoop
+000015C2  D1FC 00000014            760      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+000015C8  5307                     761      sub.b   #1,d7
+000015CA  66CE                     762      bne     .loop
+000015CC  4E75                     763      rts
+000015CE                           764  
+000015CE                           765  drawLevel3Asteroids:
+000015CE  41F9 00002644            766      lea     asteroids,a0
+000015D4  7E06                     767      moveq   #MAX_ASTEROID_COUNT,d7
+000015D6                           768  .loop:
+000015D6  2228 0000                769      move.l  ASTEROID_X(a0),d1
+000015DA  6700 0056                770      beq     .continueLoop           ;Don't draw if it's not populated
+000015DE  2428 0004                771      move.l  ASTEROID_Y(a0),d2
+000015E2                           772  
+000015E2  E081                     773      asr.l   #8,d1
+000015E4  E082                     774      asr.l   #8,d2
+000015E6                           775  
+000015E6  7600                     776      moveq   #0,d3
+000015E8  1639 00002824            777      move.b  curAsteroidSize,d3
+000015EE  7800                     778      moveq   #0,d4
+000015F0  1839 00002824            779      move.b  curAsteroidSize,d4
+000015F6                           780  
+000015F6  D681                     781      add.l   d1,d3
+000015F8  D882                     782      add.l   d2,d4
+000015FA                           783  
+000015FA  7058                     784      moveq   #DRAW_FILLED_ELLIPSE_TRAP_CODE,d0
+000015FC  4E4F                     785      trap    #15
+000015FE  2A01                     786      move.l  d1,d5
+00001600                           787  
+00001600  223C 00FFFFFF            788      move.l  #WHITE,d1
+00001606  4EB8 147E                789      jsr     setPenColor
+0000160A  4EB8 1484                790      jsr     setFillColor
+0000160E  2205                     791      move.l  d5,d1
+00001610  D2B9 00002826            792      add.l   curHalfAsteroidSize,d1
+00001616  D4B9 00002826            793      add.l   curHalfAsteroidSize,d2
+0000161C  5D83                     794      sub.l   #6,d3
+0000161E  5D84                     795      sub.l   #6,d4
+00001620  7058                     796      moveq   #DRAW_FILLED_ELLIPSE_TRAP_CODE,d0
+00001622  4E4F                     797      trap    #15
+00001624  223C 00666666            798      move.l  #GREY,d1
+0000162A  4EB8 147E                799      jsr     setPenColor
+0000162E  4EB8 1484                800      jsr     setFillColor
+00001632                           801  
+00001632                           802  .continueLoop
+00001632  D1FC 00000014            803      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+00001638  5307                     804      sub.b   #1,d7
+0000163A  669A                     805      bne     .loop
+0000163C  4E75                     806      rts
+0000163E                           807  
+0000163E                           808  
+0000163E                           809  updateAsteroidLocation:
+0000163E  41F9 00002644            810      lea     asteroids,a0
+00001644  7C06                     811      moveq   #MAX_ASTEROID_COUNT,d6  
+00001646                           812  updateAsteroidloop:
+00001646  2228 0000                813      move.l  ASTEROID_X(a0),d1       ;Means asteroid is not in use
+0000164A  6700 00F0                814      beq     nextAsteroidDrawIter
+0000164E  2428 0004                815      move.l  ASTEROID_Y(a0),d2
+00001652                           816  
+00001652                           817      ;Updating X Location based on velocity
+00001652  2628 0008                818      move.l  ASTEROID_X_VELOCITY(a0),d3
+00001656  C7F9 00002642            819      muls.w  deltaTime,d3
+0000165C  9283                     820      sub.l   d3,d1
+0000165E  2141 0000                821      move.l  d1,ASTEROID_X(a0)
+00001662                           822  
+00001662                           823      ;We're going to apply gravity in the X Direction
+00001662  2628 0008                824      move.l  ASTEROID_X_VELOCITY(a0),d3
+00001666  2839 0000282A            825      move.l  curAsteroidGravity,d4   
+0000166C  C9F9 00002642            826      muls.w  deltaTime,d4
+00001672  D684                     827      add.l   d4,d3
+00001674  2143 0008                828      move.l  d3,ASTEROID_X_VELOCITY(a0)
+00001678                           829  
+00001678                           830      ;Updating Y Location based on velocity
+00001678  2628 000C                831      move.l  ASTEROID_Y_VELOCITY(a0),d3
+0000167C  C7F9 00002642            832      muls.w  deltaTime,d3
+00001682  D483                     833      add.l   d3,d2
+00001684  2142 0004                834      move.l  d2,ASTEROID_Y(a0) ;MAY BE ABLE TO UPDATE IN MEMORY
+00001688                           835  
+00001688                           836      ;Checking if we're out of Y bounds, if so, reverse velocity
+00001688  2628 0004                837      move.l  ASTEROID_Y(a0),d3
+0000168C  E083                     838      asr.l   #8,d3
+0000168E  B6B9 00E9B84C            839      cmp.l   playYStart,d3
+00001694  6E00 001E                840      bgt     dontReverseAsteroidY
+00001698  2639 00E9B84C            841      move.l  playYStart,d3
+0000169E  E18B                     842      lsl.l   #8,d3
+000016A0  2143 0004                843      move.l  d3,ASTEROID_Y(a0)
+000016A4  2628 000C                844      move.l  ASTEROID_Y_VELOCITY(a0),d3
+000016A8  6A00 000A                845      bpl     dontReverseAsteroidY
+000016AC                           846      ;asr.l  #8,d3
+000016AC  C7FC FFFF                847      muls.w  #-1,d3
+000016B0  2143 000C                848      move.l  d3,ASTEROID_Y_VELOCITY(a0)
+000016B4                           849  dontReverseAsteroidY:
+000016B4                           850      
+000016B4                           851      ;Checking if we're out of Y bounds, if so, reverse velocity
+000016B4  2628 0004                852      move.l  ASTEROID_Y(a0),d3
+000016B8  E08B                     853      lsr.l   #8,d3
+000016BA  2839 00E9B864            854      move.l  playYEnd,d4
+000016C0  98B9 00002826            855      sub.l   curHalfAsteroidSize,d4
+000016C6  98B9 00002826            856      sub.l   curHalfAsteroidSize,d4
+000016CC  B684                     857      cmp.l   d4,d3
+000016CE  6D00 002A                858      blt     dontReverseAsteroidY2
+000016D2  2639 00E9B864            859      move.l  playYEnd,d3
+000016D8  96B9 00002826            860      sub.l   curHalfAsteroidSize,d3
+000016DE  96B9 00002826            861      sub.l   curHalfAsteroidSize,d3
+000016E4  E18B                     862      lsl.l   #8,d3
+000016E6  2143 0004                863      move.l  d3,ASTEROID_Y(a0)
+000016EA  2628 000C                864      move.l  ASTEROID_Y_VELOCITY(a0),d3
+000016EE  6B00 000A                865      bmi     dontReverseAsteroidY2
+000016F2  C7FC FFFF                866      muls.w  #-1,d3
+000016F6  2143 000C                867      move.l  d3,ASTEROID_Y_VELOCITY(a0)
+000016FA                           868  dontReverseAsteroidY2:
+000016FA                           869  
+000016FA                           870      ;Checking if asteroids are out of up bounds, and setting xVel to 0 if they are
+000016FA  2401                     871      move.l  d1,d2
+000016FC  E08A                     872      lsr.l   #8,d2
+000016FE  7600                     873      moveq   #0,d3
+00001700  1639 00002824            874      move.b  curAsteroidSize,d3
+00001706  D483                     875      add.l   d3,d2
+00001708  B4B9 00E9B860            876      cmp.l   playXEnd,d2
+0000170E  6F00 0018                877      ble     dontNukeVel
+00001712  217C 00000000 0008       878      move.l  #0,ASTEROID_X_VELOCITY(a0)
+0000171A  2A39 00E9B860            879      move.l  playXEnd,d5
+00001720  9A83                     880      sub.l   d3,d5
+00001722  E18D                     881      lsl.l   #8,d5
+00001724  2145 0000                882      move.l  d5,ASTEROID_X(a0)
+00001728                           883  dontNukeVel:
+00001728  9483                     884      sub.l   d3,d2
+0000172A                           885      ;Checking if asteroids are out of down bounds, and invalidating them if they are
+0000172A  B4B9 0000295A            886      cmp.l   currentVacuumLineX,d2
+00001730  6C00 000A                887      bge     nextAsteroidDrawIter
+00001734  217C 00000000 0000       888      move.l  #0,ASTEROID_X(a0)
+0000173C                           889  nextAsteroidDrawIter:
+0000173C  D1FC 00000014            890      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+00001742  5306                     891      sub.b   #1,d6
+00001744  6600 FF00                892      bne     updateAsteroidloop
+00001748  4E75                     893      rts
+0000174A                           894  
+0000174A                           895  checkForAsteroidBulletCollision:
+0000174A  41F9 00002644            896      lea     asteroids,a0
+00001750  7E06                     897      moveq   #MAX_ASTEROID_COUNT,d7  
+00001752  7A00                     898      moveq   #0,d5
+00001754  1A39 00002824            899      move.b  curAsteroidSize,d5
+0000175A                           900  
+0000175A                           901      ;Retrieving and squaring radius of asteroid
+0000175A  E28D                     902      lsr.l   #1,d5
+0000175C  7800                     903      moveq   #0,d4
+0000175E  1805                     904      move.b  d5,d4
+00001760  CBC4                     905      muls.w  d4,d5
+00001762  5485                     906      add.l   #2,d5
+00001764                           907  checkAsteroidLoop:
+00001764  2028 0000                908      move.l  ASTEROID_X(a0),d0
+00001768  6700 0098                909      beq     nextAsteroidCheckIter
+0000176C  2228 0004                910      move.l  ASTEROID_Y(a0),d1
+00001770  E088                     911      lsr.l   #8,d0
+00001772  E089                     912      lsr.l   #8,d1
+00001774  D0B9 00002826            913      add.l   curHalfAsteroidSize,d0
+0000177A  D2B9 00002826            914      add.l   curHalfAsteroidSize,d1
+00001780                           915  
+00001780  43F9 00002550            916      lea     bullet,a1
+00001786  7C07                     917      moveq   #BULLET_COUNT,d6    
+00001788                           918  checkBulletLoop:
+00001788  2429 0000                919      move.l  BULLET_X(a1),d2
+0000178C  6700 006E                920      beq     nextBulletCheckIter
+00001790  2629 0004                921      move.l  BULLET_Y(a1),d3
+00001794  E08A                     922      lsr.l   #8,d2
+00001796  E08B                     923      lsr.l   #8,d3
+00001798                           924  
+00001798  9480                     925      sub.l   d0,d2
+0000179A  2802                     926      move.l  d2,d4
+0000179C  C5C4                     927      muls.w  d4,d2
+0000179E                           928  
+0000179E  9681                     929      sub.l   d1,d3
+000017A0  2803                     930      move.l  d3,d4
+000017A2  C7C4                     931      muls.w  d4,d3
+000017A4                           932  
+000017A4  D483                     933      add.l   d3,d2
+000017A6  BA82                     934      cmp.l   d2,d5
+000017A8  6D00 0052                935      blt     nextBulletCheckIter     ;If we pass this, THERE IS A COLLISION
+000017AC  4EB9 000023D4            936      jsr     playHit
+000017B2                           937  
+000017B2                           938      ;Get Mult Factor
+000017B2  2429 0004                939      move.l  BULLET_Y(a1),d2
+000017B6  E08A                     940      lsr.l   #8,d2
+000017B8  9481                     941      sub.l   d1,d2
+000017BA  C5FC FFFF                942      muls.w  #-1,d2
+000017BE  2639 00002636            943      move.l  curBulletYPower,d3
+000017C4  C5C3                     944      muls.w  d3,d2
+000017C6  D5A8 000C                945      add.l   d2,ASTEROID_Y_VELOCITY(a0)
+000017CA  2439 00002632            946      move.l  curBulletXPower,d2
+000017D0  95A8 0008                947      sub.l   d2,ASTEROID_X_VELOCITY(a0)
+000017D4  237C 00000000 0000       948      move.l  #0,BULLET_X(a1)
+000017DC  4EB9 0000194A            949      jsr     incrementScoreCounter
+000017E2  53A8 0010                950      sub.l   #1,ASTEROID_HEALTH(a0)
+000017E6  2828 0010                951      move.l  ASTEROID_HEALTH(a0),d4
+000017EA  6600 0010                952      bne     nextBulletCheckIter         ;If we pass this, ASTEROID HAS DIED
+000017EE  217C 00000000 0000       953      move.l  #0,ASTEROID_X(a0)
+000017F6  4EF9 00001802            954      jmp nextAsteroidCheckIter
+000017FC                           955  nextBulletCheckIter:
+000017FC  5089                     956      add.l   #BULLET_SIZE_IN_MEMORY,a1
+000017FE  5306                     957      sub.b   #1,d6
+00001800  6686                     958      bne     checkBulletLoop
+00001802                           959  nextAsteroidCheckIter:
+00001802  D1FC 00000014            960      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+00001808  5307                     961      sub.b   #1,d7
+0000180A  6600 FF58                962      bne     checkAsteroidLoop
+0000180E  4E75                     963      rts
+00001810                           964  
+00001810                           965  ;D0 is number to draw
+00001810                           966  ;D1 is center X location
+00001810                           967  ;D2 is center Y location
+00001810                           968  drawSevenSegment:
+00001810  48E7 FFFE                969      movem.l ALL_REG,-(sp)
+00001814  23C1 000028AC            970      move.l  d1,segmentCenterX
+0000181A  23C2 000028B0            971      move.l  d2,segmentCenterY
+00001820  7200                     972      moveq   #0,d1
+00001822  7400                     973      moveq   #0,d2
+00001824  7600                     974      moveq   #0,d3
+00001826  7800                     975      moveq   #0,d4
+00001828  41F9 00002832            976      lea     sevenSegmentList,a0
+0000182E  43F9 0000283C            977      lea     segmentStartXLocs,a1
+00001834  45F9 00002874            978      lea     segmentStartYLocs,a2
+0000183A  47F9 00002858            979      lea     segmentEndXLocs,a3
+00001840  49F9 00002890            980      lea     segmentEndYLocs,a4
+00001846  1E30 0000                981      move.b  (a0,d0),d7
+0000184A  7A07                     982      moveq   #7,d5
+0000184C                           983      ;AT THIS POINT
+0000184C                           984      ;D0 is clobbered for trap code
+0000184C                           985      ;D1 is draw left x
+0000184C                           986      ;D2 is draw upper y
+0000184C                           987      ;D3 is draw right x
+0000184C                           988      ;D4 is draw lower y
+0000184C                           989      ;D5 is loop controller
+0000184C                           990      ;D7 is 7 seg binary checker
+0000184C                           991  .loop:
+0000184C  5385                     992      sub.l   #1,d5
+0000184E  0B07                     993      btst    d5,d7
+00001850  6700 0008                994      beq     .penIsMaroon
+00001854  4EF9 0000186E            995      jmp     .penIsRed
+0000185A                           996  .penIsMaroon:
+0000185A  2239 000028C0            997      move.l  curCounterOffColor,d1
+00001860  4EB8 147E                998      jsr     setPenColor
+00001864  4EB8 1484                999      jsr     setFillColor
+00001868  4EF9 00001882           1000      jmp     .drawSegment
+0000186E                          1001  .penIsRed:
+0000186E  2239 000028BC           1002      move.l  curCounterColor,d1
+00001874  4EB8 147E               1003      jsr     setPenColor
+00001878  4EB8 1484               1004      jsr     setFillColor
+0000187C  4EF9 00001882           1005      jmp     .drawSegment
+00001882                          1006  .drawSegment
+00001882  41F9 00002832           1007      lea     sevenSegmentList,a0
+00001888  43F9 0000283C           1008      lea     segmentStartXLocs,a1
+0000188E  45F9 00002874           1009      lea     segmentStartYLocs,a2
+00001894  47F9 00002858           1010      lea     segmentEndXLocs,a3
+0000189A  49F9 00002890           1011      lea     segmentEndYLocs,a4
+000018A0                          1012  
+000018A0  E58D                    1013      lsl.l   #2,d5
+000018A2  D3C5                    1014      add.l   d5,a1
+000018A4  D5C5                    1015      add.l   d5,a2
+000018A6  D7C5                    1016      add.l   d5,a3
+000018A8  D9C5                    1017      add.l   d5,a4
+000018AA  2211                    1018      move.l  (a1),d1
+000018AC  2412                    1019      move.l  (a2),d2
+000018AE  2613                    1020      move.l  (a3),d3
+000018B0  2814                    1021      move.l  (a4),d4
+000018B2  D2B9 000028AC           1022      add.l   segmentCenterX,d1
+000018B8  D6B9 000028AC           1023      add.l   segmentCenterX,d3
+000018BE  D4B9 000028B0           1024      add.l   segmentCenterY,d2
+000018C4  D8B9 000028B0           1025      add.l   segmentCenterY,d4
+000018CA  7057                    1026      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+000018CC  4E4F                    1027      trap    #15
+000018CE  4EB8 1492               1028      jsr     drawBufferToScreen
+000018D2                          1029  
+000018D2  E48D                    1030      lsr.l   #2,d5
+000018D4  6600 FF76               1031      bne     .loop
+000018D8  4CDF 7FFF               1032      movem.l (sp)+,ALL_REG
+000018DC  4E75                    1033      rts
+000018DE                          1034  
+000018DE                          1035  drawBulletCount:
+000018DE  2639 000028D4           1036      move.l  currentBullets,d3
+000018E4  2003                    1037      move.l  d3,d0
+000018E6  2239 000028D8           1038      move.l  currentBulletsX,d1
+000018EC  2439 000028DC           1039      move.l  currentBulletsY,d2
+000018F2  0682 0000000A           1040      add.l   #10,d2
+000018F8                          1041  
+000018F8  80FC 000A               1042      divu    #10,d0
+000018FC  3600                    1043      move.w  d0,d3
+000018FE  4840                    1044      swap    d0
+00001900  48C0                    1045      ext.l   d0
+00001902  4EB8 1810               1046      jsr     drawSevenSegment
+00001906  0482 00000014           1047      sub.l   #20,d2
+0000190C  3003                    1048      move.w  d3,d0
+0000190E  4EB8 1810               1049      jsr     drawSevenSegment
+00001912  4E75                    1050      rts
+00001914                          1051  
+00001914                          1052  drawThresholdCount:
+00001914  2639 000028E0           1053      move.l  pointsThreshold,d3
+0000191A  2003                    1054      move.l  d3,d0
+0000191C  2239 000028E4           1055      move.l  currentThresholdX,d1
+00001922  2439 000028E8           1056      move.l  currentThresholdY,d2
+00001928  0682 0000000A           1057      add.l   #10,d2
+0000192E                          1058  
+0000192E  80FC 000A               1059      divu    #10,d0
+00001932  3600                    1060      move.w  d0,d3
+00001934  4840                    1061      swap    d0
+00001936  48C0                    1062      ext.l   d0
+00001938  4EB8 1810               1063      jsr     drawSevenSegment
+0000193C  0482 00000014           1064      sub.l   #20,d2
+00001942  3003                    1065      move.w  d3,d0
+00001944  4EB8 1810               1066      jsr     drawSevenSegment
+00001948  4E75                    1067      rts
+0000194A                          1068  
+0000194A                          1069  incrementScoreCounter:
+0000194A  52B9 000028C4           1070      add.l   #1,currentScore
+00001950  52B9 000028D0           1071      add.l   #1,totalScore
+00001956  4E75                    1072      rts
+00001958                          1073  
+00001958                          1074  drawScore:
+00001958  2639 000028C4           1075      move.l  currentScore,d3
+0000195E  2003                    1076      move.l  d3,d0
+00001960  2239 000028C8           1077      move.l  currentScoreX,d1
+00001966  2439 000028CC           1078      move.l  currentScoreY,d2
+0000196C  0682 0000000A           1079      add.l   #10,d2
+00001972                          1080  
+00001972  80FC 000A               1081      divu    #10,d0
+00001976  3600                    1082      move.w  d0,d3
+00001978  4840                    1083      swap    d0
+0000197A  48C0                    1084      ext.l   d0
+0000197C  4EB8 1810               1085      jsr     drawSevenSegment
+00001980  0482 00000014           1086      sub.l   #20,d2
+00001986  3003                    1087      move.w  d3,d0
+00001988  4EB8 1810               1088      jsr     drawSevenSegment
+0000198C  4E75                    1089      rts
+0000198E                          1090  
+0000198E                          1091  drawVacuumLine:
+0000198E  2239 0000295A           1092      move.l  currentVacuumLineX,d1
+00001994  2439 00E9B84C           1093      move.l  playYStart,d2
+0000199A  2639 0000295A           1094      move.l  currentVacuumLineX,d3
+000019A0  2839 00E9B864           1095      move.l  playYEnd,d4
+000019A6  7057                    1096      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+000019A8  4E4F                    1097      trap    #15
+000019AA  4E75                    1098      rts
+000019AC                          1099  
+000019AC                          1100  nukeBullets:
+000019AC  41F9 00002550           1101      lea     bullet,a0
+000019B2  7C07                    1102      moveq   #BULLET_COUNT,d6    
+000019B4                          1103  .bulletNukeLoop:
+000019B4  217C 00000000 0000      1104      move.l  #0,BULLET_X(a0)     ;Means bullet is not in use
+000019BC  5088                    1105      add.l   #BULLET_SIZE_IN_MEMORY,a0
+000019BE  5306                    1106      sub.b   #1,d6
+000019C0  66F2                    1107      bne     .bulletNukeLoop
+000019C2  4E75                    1108      rts
+000019C4                          1109  
+000019C4                          1110  nukeAsteroids:
+000019C4  41F9 00002644           1111      lea     asteroids,a0
+000019CA  7C06                    1112      moveq   #MAX_ASTEROID_COUNT,d6  
+000019CC                          1113  .asteroidNukeLoop:
+000019CC  217C 00000000 0000      1114      move.l  #0,ASTEROID_X(a0)
+000019D4  D1FC 00000014           1115      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+000019DA  5306                    1116      sub.b   #1,d6
+000019DC  66EE                    1117      bne     .asteroidNukeLoop
+000019DE  4E75                    1118      rts
+000019E0                          1119  
+000019E0                          1120  resetScore:
+000019E0  23FC 00000000 000028C4  1121      move.l  #0,currentScore
+000019EA  4EB8 1958               1122      jsr     drawScore
+000019EE  4E75                    1123      rts
+000019F0                          1124  
+000019F0                          1125  resetGame:
+000019F0  2239 00E9B878           1126      move.l  curMusic,d1
+000019F6  4EB9 000023FA           1127      jsr     stopMusic
+000019FC                          1128  
+000019FC  4EB8 19C4               1129      jsr nukeAsteroids
+00001A00  4EB8 19AC               1130      jsr nukeBullets
+00001A04  4EB8 1220               1131      jsr resetCircleLocation
+00001A08  4EB8 19E0               1132      jsr resetScore
+00001A0C  23FC 00000000 000028D0  1133      move.l  #0,totalScore
+00001A16  23FC 00000001 000028EE  1134      move.l  #1,currentLevel
+00001A20  4E75                    1135      rts
+00001A22                          1136  
+00001A22                          1137  incrementLevel:
+00001A22  2239 00E9B878           1138      move.l  curMusic,d1
+00001A28  4EB9 000023FA           1139      jsr     stopMusic
+00001A2E                          1140  
+00001A2E  4EB8 19C4               1141      jsr     nukeAsteroids
+00001A32  4EB8 19AC               1142      jsr     nukeBullets
+00001A36  4EB8 1220               1143      jsr     resetCircleLocation
+00001A3A  4EB8 19E0               1144      jsr     resetScore
+00001A3E  52B9 000028EE           1145      add.l   #1,currentLevel
+00001A44  4E75                    1146      rts
+00001A46                          1147  
+00001A46                          1148  checkForLevelEnd:
+00001A46  41F9 00002644           1149      lea     asteroids,a0
+00001A4C  7C06                    1150      moveq   #MAX_ASTEROID_COUNT,d6  
+00001A4E                          1151  .astCheckLoop:
+00001A4E  0CA8 00000000 0000      1152      cmp.l   #0,ASTEROID_X(a0)
+00001A56  6600 0084               1153      bne     .gamesNotOver
+00001A5A  D1FC 00000014           1154      add.l   #ASTEROID_SIZE_IN_MEMORY,a0
+00001A60  5306                    1155      sub.b   #1,d6
+00001A62  66EA                    1156      bne     .astCheckLoop
+00001A64  2039 000028E0           1157      move.l  pointsThreshold,d0
+00001A6A  2239 000028C4           1158      move.l  currentScore,d1
+00001A70  B280                    1159      cmp.l   d0,d1                   ;If we get here, LEVEL'S OVER. Check for level win or loss
+00001A72  6C00 0020               1160      bge     .winState
+00001A76                          1161  .loseState
+00001A76  4EB9 000023BC           1162      jsr     playLose
+00001A7C  207C 007A6868           1163      move.l  #youLoseBmp,a0
+00001A82  4EB9 00001BF0           1164      jsr     displayEndBmp
+00001A88  4EB8 19F0               1165      jsr     resetGame
+00001A8C  4EB9 00002336           1166      jsr     startLevel
+00001A92  4E75                    1167      rts
+00001A94                          1168  .winState
+00001A94  2239 000028EE           1169      move.l  currentLevel,d1
+00001A9A  B2BC 00000009           1170      cmp.l   #9,d1
+00001AA0  6700 0024               1171      beq     .finishGameState
+00001AA4  4EB9 000023A4           1172      jsr     playWin
+00001AAA  207C 0050253A           1173      move.l  #youWinBmp,a0
+00001AB0  4EB9 00001BF0           1174      jsr     displayEndBmp
+00001AB6  4EB8 1A22               1175      jsr     incrementLevel
+00001ABA  4EB9 00002336           1176      jsr     startLevel
+00001AC0  4EF9 00001ADC           1177      jmp     .gamesNotOver
+00001AC6                          1178  .finishGameState:
+00001AC6  207C 00503832           1179      move.l  #youWinFinalBmp,a0
+00001ACC  4EB9 00001B80           1180      jsr     drawFinalScreen
+00001AD2  4EB8 19F0               1181      jsr     resetGame
+00001AD6  4EB9 00002336           1182      jsr     startLevel
+00001ADC                          1183  .gamesNotOver:
+00001ADC  4E75                    1184      rts
+00001ADE                          1185  
+00001ADE                          1186  ;This function has a lot of fiddly math for correct positioning
+00001ADE                          1187  ;It was all pulled out of my butt to look good. Feel free to edit (Pairs with "drawTotalScore")
+00001ADE                          1188  eraseTotalScore:
+00001ADE  7200                    1189      moveq   #0,d1
+00001AE0  4EB8 147E               1190      jsr     setPenColor
+00001AE4  4EB8 1484               1191      jsr     setFillColor
+00001AE8                          1192  
+00001AE8  2239 00E9B88C           1193      move.l  curEndLocationX,d1
+00001AEE  2439 00E9B890           1194      move.l  curEndLocationY,d2
+00001AF4  2639 00E9B88C           1195      move.l  curEndLocationX,d3
+00001AFA  2839 00E9B890           1196      move.l  curEndLocationY,d4
+00001B00  0481 0000003C           1197      sub.l   #60,d1
+00001B06  0482 00000014           1198      sub.l   #20,d2
+00001B0C  0684 00000046           1199      add.l   #70,d4
+00001B12  0683 00000014           1200      add.l   #20,d3
+00001B18  7057                    1201      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+00001B1A  4E4F                    1202      trap    #15
+00001B1C  4E75                    1203      rts
+00001B1E                          1204  
+00001B1E                          1205  ;This function has a lot of fiddly math for correct positioning
+00001B1E                          1206  ;It was all pulled out of my butt to look good. Feel free to edit
+00001B1E                          1207  drawTotalScore:
+00001B1E  2239 00E9B88C           1208      move.l  curEndLocationX,d1
+00001B24  2439 00E9B890           1209      move.l  curEndLocationY,d2
+00001B2A  0481 00000032           1210      sub.l   #50,d1
+00001B30  0682 00000032           1211      add.l   #50,d2
+00001B36  2639 000028D0           1212      move.l  totalScore,d3
+00001B3C  2003                    1213      move.l  d3,d0
+00001B3E                          1214  
+00001B3E  0682 0000000A           1215      add.l   #10,d2
+00001B44  80FC 000A               1216      divu    #10,d0
+00001B48  3600                    1217      move.w  d0,d3
+00001B4A  4840                    1218      swap    d0
+00001B4C  48C0                    1219      ext.l   d0
+00001B4E  4EB8 1810               1220      jsr     drawSevenSegment
+00001B52  0482 00000014           1221      sub.l   #20,d2
+00001B58  3003                    1222      move.w  d3,d0
+00001B5A  80FC 000A               1223      divu    #10,d0
+00001B5E  3600                    1224      move.w  d0,d3
+00001B60  4840                    1225      swap    d0
+00001B62  48C0                    1226      ext.l   d0
+00001B64  4EB8 1810               1227      jsr     drawSevenSegment
+00001B68  0482 00000014           1228      sub.l   #20,d2
+00001B6E  3003                    1229      move.w  d3,d0
+00001B70  80FC 000A               1230      divu    #10,d0
+00001B74  3600                    1231      move.w  d0,d3
+00001B76  4840                    1232      swap    d0
+00001B78  48C0                    1233      ext.l   d0
+00001B7A  4EB8 1810               1234      jsr     drawSevenSegment
+00001B7E  4E75                    1235      rts
+00001B80                          1236  
+00001B80                          1237  ;This function has a lot of fiddly math for correct positioning
+00001B80                          1238  ;It was all pulled out of my butt to look good. Feel free to edit
+00001B80                          1239  drawFinalScreen:
+00001B80  701C                    1240      move.l      #28,d0
+00001B82  9FC0                    1241      sub.l       d0,sp           ;prepare stack for two 4 byte arguments
+00001B84  2E88                    1242      move.l      a0,(sp)
+00001B86  2F7C 00000000 0004      1243      move.l      #0,4(sp)        ;set the values of the arguments
+00001B8E  2F7C 00000000 0008      1244      move.l      #0,8(sp)
+00001B96  2F7C 000000FF 000C      1245      move.l      #$FF,12(sp)     ;Not Going to slice
+00001B9E  2F7C 00000000 0010      1246      move.l      #0,16(sp)
+00001BA6  2F7C 00000000 0014      1247      move.l      #0,20(sp)
+00001BAE  2F7C 00000000 0018      1248      move.l      #0,24(sp)
+00001BB6                          1249      
+00001BB6  4EB9 00E9B8E8           1250      jsr drawBmp
+00001BBC  701C                    1251      move.l      #28,d0
+00001BBE  DFC0                    1252      add.l       d0,sp
+00001BC0  4EB8 1492               1253      jsr drawBufferToScreen
+00001BC4                          1254  
+00001BC4  4EB8 1B1E               1255      jsr     drawTotalScore
+00001BC8                          1256  
+00001BC8  7017                    1257      moveq   #DELAY_TIME_TRAP_CODE,d0
+00001BCA  223C 0000012C           1258      move.l  #300,d1
+00001BD0  4E4F                    1259      trap    #15
+00001BD2                          1260  
+00001BD2                          1261      ;Erasing bitmap
+00001BD2  4EB8 1ADE               1262      jsr eraseTotalScore
+00001BD6  223C 0000017B           1263      move.l  #379,d1
+00001BDC  243C 000000E6           1264      move.l  #230,d2
+00001BE2  7614                    1265      move.l  #20,d3
+00001BE4  7850                    1266      move.l  #80,d4
+00001BE6  D681                    1267      add.l   d1,d3
+00001BE8  D882                    1268      add.l   d2,d4
+00001BEA  7057                    1269      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+00001BEC  4E4F                    1270      trap    #15
+00001BEE  4E75                    1271      rts
+00001BF0                          1272  
+00001BF0                          1273  displayEndBmp:
+00001BF0  701C                    1274      move.l  #28,d0
+00001BF2  9FC0                    1275      sub.l   d0,sp                   ;prepare stack for two 4 byte arguments
+00001BF4  2E88                    1276      move.l  a0,(sp)
+00001BF6  2F79 00E9B88C 0004      1277      move.l  curEndLocationX,4(sp)   ;set the values of the arguments
+00001BFE  2F79 00E9B890 0008      1278      move.l  curEndLocationY,8(sp)
+00001C06  2F7C 000000FF 000C      1279      move.l  #$FF,12(sp)             ;Not Going to slice
+00001C0E  2F7C 00000000 0010      1280      move.l  #0,16(sp)
+00001C16  2F7C 00000000 0014      1281      move.l  #0,20(sp)
+00001C1E  2F7C 00000000 0018      1282      move.l  #0,24(sp)
+00001C26                          1283      
+00001C26  4EB9 00E9B8E8           1284      jsr drawBmp
+00001C2C  701C                    1285      move.l  #28,d0
+00001C2E  DFC0                    1286      add.l   d0,sp
+00001C30  4EB8 1492               1287      jsr     drawBufferToScreen
+00001C34  4EB8 1B1E               1288      jsr     drawTotalScore
+00001C38  7017                    1289      moveq   #DELAY_TIME_TRAP_CODE,d0
+00001C3A  223C 0000012C           1290      move.l  #300,d1
+00001C40  4E4F                    1291      trap    #15
+00001C42                          1292  
+00001C42                          1293      ;Erasing bitmap
+00001C42  4EB8 1ADE               1294      jsr eraseTotalScore
+00001C46  2239 00E9B88C           1295      move.l  curEndLocationX,d1
+00001C4C  2439 00E9B890           1296      move.l  curEndLocationY,d2
+00001C52  7614                    1297      move.l  #20,d3
+00001C54  7850                    1298      move.l  #80,d4
+00001C56  D681                    1299      add.l   d1,d3
+00001C58  D882                    1300      add.l   d2,d4
+00001C5A  7057                    1301      moveq   #DRAW_FILLED_RECT_TRAP_CODE,d0
+00001C5C  4E4F                    1302      trap    #15
+00001C5E  4E75                    1303      rts
+00001C60                          1304  
+00001C60                          1305  loadScreen:
+00001C60  0CB9 00000001 000028EE  1306      cmp.l   #1,currentLevel
+00001C6A  6600 000E               1307      bne     .loadScreen80
+00001C6E  41F9 00002962           1308      lea     titleScreen,a0
+00001C74  4EF9 00001CC2           1309      jmp     .displayScreen
+00001C7A                          1310  .loadScreen80
+00001C7A  0CB9 00000003 000028EE  1311      cmp.l   #3,currentLevel
+00001C84  6600 000E               1312      bne     .loadScreen90
+00001C88  41F9 000E3998           1313      lea     loadScreen80,a0
+00001C8E  4EF9 00001CC2           1314      jmp     .displayScreen
+00001C94                          1315  .loadScreen90
+00001C94  0CB9 00000006 000028EE  1316      cmp.l   #6,currentLevel
+00001C9E  6600 000E               1317      bne     .loadScreen00
+00001CA2  41F9 002432CE           1318      lea     loadScreen90,a0
+00001CA8  4EF9 00001CC2           1319      jmp     .displayScreen
+00001CAE                          1320  .loadScreen00
+00001CAE  0CB9 00000008 000028EE  1321      cmp.l   #8,currentLevel
+00001CB8  6600 0008               1322      bne     .displayScreen
+00001CBC  41F9 003A2C04           1323      lea     loadScreen00,a0
+00001CC2                          1324  .displayScreen
+00001CC2  4EB9 00001DCE           1325      jsr     printBackground
+00001CC8  4EB8 1492               1326      jsr     drawBufferToScreen
+00001CCC  4E75                    1327      rts
+00001CCE                          1328  
+00001CCE                          1329  waitForClick:
+00001CCE                          1330  .wait4Click:
+00001CCE  703D                    1331      moveq   #GET_MOUSE_LOC_TRAP_CODE,d0
+00001CD0  7200                    1332      moveq   #0,d1
+00001CD2  4E4F                    1333      trap    #15
+00001CD4                          1334  
+00001CD4                          1335      ;Getting mouse down state
+00001CD4  C03C 0002               1336      and.b   #2,d0
+00001CD8  E208                    1337      lsr.b   #1,d0
+00001CDA  67F2                    1338      beq     .wait4Click
+00001CDC  4E75                    1339      rts
+00001CDE                          1340  
+00001CDE                          1341  changeMapIfNecessary:
+00001CDE  2A39 000028EE           1342      move.l  currentLevel,d5
+00001CE4  BABC 00000001           1343      cmp.l   #1,d5
+00001CEA  6600 0032               1344      bne     .tryLevel2
+00001CEE  2439 0000293A           1345      move.l  level1X,d2      ;Changing Window Size
+00001CF4  3202                    1346      move.w  d2,d1
+00001CF6  4841                    1347      swap    d1
+00001CF8  2439 0000293E           1348      move.l  level1Y,d2
+00001CFE  3202                    1349      move.w  d2,d1 
+00001D00  7021                    1350      moveq   #OUTPUT_WINDOW_TRAP_CODE,d0
+00001D02  4E4F                    1351      trap    #15
+00001D04  7021                    1352      move.l  #OUTPUT_WINDOW_TRAP_CODE,d0
+00001D06  7201                    1353      move.l  #NOT_FULL_SCREEN_SETTING_NUM,d1
+00001D08  4E4F                    1354      trap    #15
+00001D0A  4EB8 1C60               1355      jsr     loadScreen
+00001D0E  41F9 007A7B60           1356      lea     level1Bmp,a0
+00001D14  4EB9 00001DCE           1357      jsr     printBackground
+00001D1A  4EB8 1CCE               1358      jsr     waitForClick
+00001D1E                          1359  .tryLevel2:
+00001D1E  BABC 00000003           1360      cmp.l   #3,d5
+00001D24  6600 0032               1361      bne     .tryLevel3
+00001D28  2439 00002942           1362      move.l  level2X,d2      ;Changing Window Size
+00001D2E  3202                    1363      move.w  d2,d1
+00001D30  4841                    1364      swap    d1
+00001D32  2439 00002946           1365      move.l  level2Y,d2
+00001D38  3202                    1366      move.w  d2,d1 
+00001D3A  7021                    1367      moveq   #OUTPUT_WINDOW_TRAP_CODE,d0
+00001D3C  4E4F                    1368      trap    #15
+00001D3E  7021                    1369      move.l  #OUTPUT_WINDOW_TRAP_CODE,d0
+00001D40  7201                    1370      move.l  #NOT_FULL_SCREEN_SETTING_NUM,d1
+00001D42  4E4F                    1371      trap    #15
+00001D44  4EB8 1C60               1372      jsr     loadScreen
+00001D48  41F9 00888B98           1373      lea     level2Bmp,a0
+00001D4E  4EB9 00001DCE           1374      jsr     printBackground
+00001D54  4EB8 1CCE               1375      jsr     waitForClick
+00001D58                          1376  .tryLevel3:
+00001D58  BABC 00000006           1377      cmp.l   #6,d5
+00001D5E  6600 0032               1378      bne     .tryLevel4
+00001D62  2439 0000294A           1379      move.l  level3X,d2      ;Changing Window Size
+00001D68  3202                    1380      move.w  d2,d1
+00001D6A  4841                    1381      swap    d1
+00001D6C  2439 0000294E           1382      move.l  level3Y,d2
+00001D72  3202                    1383      move.w  d2,d1 
+00001D74  7021                    1384      moveq   #OUTPUT_WINDOW_TRAP_CODE,d0
+00001D76  4E4F                    1385      trap    #15
+00001D78  7021                    1386      move.l  #OUTPUT_WINDOW_TRAP_CODE,d0
+00001D7A  7201                    1387      move.l  #NOT_FULL_SCREEN_SETTING_NUM,d1
+00001D7C  4E4F                    1388      trap    #15
+00001D7E  4EB8 1C60               1389      jsr     loadScreen
+00001D82  41F9 009B87D0           1390      lea     level3Bmp,a0
+00001D88  4EB9 00001DCE           1391      jsr     printBackground
+00001D8E  4EB8 1CCE               1392      jsr     waitForClick
+00001D92                          1393  .tryLevel4:
+00001D92  BABC 00000008           1394      cmp.l   #8,d5
+00001D98  6600 0032               1395      bne     .noLevels
+00001D9C  2439 00002952           1396      move.l  level4X,d2      ;Changing Window Size
+00001DA2  3202                    1397      move.w  d2,d1
+00001DA4  4841                    1398      swap    d1
+00001DA6  2439 00002956           1399      move.l  level4Y,d2
+00001DAC  3202                    1400      move.w  d2,d1 
+00001DAE  7021                    1401      moveq   #OUTPUT_WINDOW_TRAP_CODE,d0
+00001DB0  4E4F                    1402      trap    #15
+00001DB2  7021                    1403      move.l  #OUTPUT_WINDOW_TRAP_CODE,d0
+00001DB4  7202                    1404      move.l  #FULL_SCREEN_SETTING_NUM,d1
+00001DB6  4E4F                    1405      trap    #15
+00001DB8  4EB8 1C60               1406      jsr     loadScreen
+00001DBC  41F9 00BF8808           1407      lea     level4Bmp,a0
+00001DC2  4EB9 00001DCE           1408      jsr     printBackground
+00001DC8  4EB8 1CCE               1409      jsr     waitForClick
+00001DCC                          1410  .noLevels
+00001DCC  4E75                    1411      rts
+00001DCE                          1412  
+00001DCE                          1413  
+00001DCE                          1414  printBackground:
+00001DCE  701C                    1415      move.l  #28,d0
+00001DD0  9FC0                    1416      sub.l   d0,sp       ;prepare stack for two 4 byte arguments
+00001DD2  2E88                    1417      move.l  a0,(sp)
+00001DD4  2F7C 00000000 0004      1418      move.l  #0,4(sp)    ;set the values of the arguments
+00001DDC  2F7C 00000000 0008      1419      move.l  #0,8(sp)
+00001DE4  2F7C 000000FF 000C      1420      move.l  #$FF,12(sp) ;Not Going to slice
+00001DEC  2F7C 00000000 0010      1421      move.l  #0,16(sp)
+00001DF4  2F7C 00000000 0014      1422      move.l  #0,20(sp)
+00001DFC  2F7C 00000000 0018      1423      move.l  #0,24(sp)
+00001E04  4EB9 00E9B8E8           1424      jsr     drawBmp
+00001E0A  701C                    1425      move.l  #28,d0
+00001E0C  DFC0                    1426      add.l   d0,sp
+00001E0E  4E75                    1427      rts
+00001E10                          1428      
+00001E10                          1429  ;This is where we load all of the static presets for each level.
+00001E10                          1430  ;This includes color schemes, background map data, sound effects, and score/information locations
+00001E10                          1431  ;Level shifts are hardcoded. Possible optimizations include dynamic level boundaries
+00001E10                          1432  loadLevelPresets:
+00001E10  2A39 000028EE           1433      move.l  currentLevel,d5
+00001E16  BABC 00000001           1434      cmp.l   #1,d5
+00001E1C  6600 015A               1435      bne     .tryLevel3
+00001E20  23FC 00000044 00E9B848  1436      move.l  #A_PLAY_X_START,playXStart
+00001E2A  23FC 00000059 00E9B84C  1437      move.l  #A_PLAY_Y_START,playYStart      
+00001E34  23FC 0000004A 00E9B850  1438      move.l  #A_PLAY_X_START_OFFSET,playXStartOffset
+00001E3E  23FC 0000005F 00E9B854  1439      move.l  #A_PLAY_Y_START_OFFSET,playYStartOffset
+00001E48  23FC 00000234 00E9B858  1440      move.l  #A_PLAY_X_SIZE,playXSize        
+00001E52  23FC 00000180 00E9B85C  1441      move.l  #A_PLAY_Y_SIZE,playYSize
+00001E5C  23FC 00000278 00E9B860  1442      move.l  #A_PLAY_X_END,playXEnd      
+00001E66  23FC 000001D9 00E9B864  1443      move.l  #A_PLAY_Y_END,playYEnd      
+00001E70  23FC 0000026C 00E9B868  1444      move.l  #A_PLAY_X_END_OFFSET,playXEndOffset 
+00001E7A  23FC 000001CD 00E9B86C  1445      move.l  #A_PLAY_Y_END_OFFSET,playYEndOffset 
+00001E84  23FC 000000B4 0000295A  1446      move.l  #A_VACUUM_OFFSET,currentVacuumLineX
+00001E8E  23FC 000000B4 0000295A  1447      move.l  #A_VACUUM_OFFSET,currentVacuumLineX
+00001E98  23FC 000001E5 000028C8  1448      move.l  #A_SCORE_X,currentScoreX
+00001EA2  23FC 0000002D 000028CC  1449      move.l  #A_SCORE_Y,currentScoreY
+00001EAC  23FC 0000010E 000028D8  1450      move.l  #A_BULLET_COUNT_X,currentBulletsX
+00001EB6  23FC 0000002D 000028DC  1451      move.l  #A_BULLET_COUNT_Y,currentBulletsY
+00001EC0  23FC 00000163 000028E4  1452      move.l  #A_THRESHOLD_X,currentThresholdX
+00001ECA  23FC 0000002D 000028E8  1453      move.l  #A_THRESHOLD_Y,currentThresholdY
+00001ED4  23FC 000001A0 00002546  1454      move.l  #A_CIRCLE_SPEED,circleSpeed
+00001EDE  23FC 00000200 0000263A  1455      move.l  #A_BULLET_SPEED,bulletSpeed
+00001EE8  13FC 0028 00002824      1456      move.b  #A_ASTEROIDSIZE,curAsteroidSize
+00001EF0  23FC 00000014 00002826  1457      move.l  #A_HALF_ASTEROIDSIZE,curHalfAsteroidSize
+00001EFA  23FC 00000005 0000282E  1458      move.l  #A_ASTEROID_HEALTH,levelAsteroidHealth
+00001F04  23FC 00001556 00E9B874  1459      move.l  #drawAsteroids,curDrawAsteroidFunction
+00001F0E  23FC 00001326 00E9B870  1460      move.l  #drawShip,curDrawShipFunction
+00001F18  23FC 000000FF 000028BC  1461      move.l  #RED,curCounterColor
+00001F22  23FC 000E003E 000028C0  1462      move.l  #MAROON,curCounterOffColor
+00001F2C  23FC 00000000 00E9B878  1463      move.l  #0,curMusic
+00001F36  23FC 00000000 00E9B87C  1464      move.l  #0,curHit
+00001F40  23FC 00000007 00E9B880  1465      move.l  #FINAL_SHOOT,curShoot
+00001F4A  23FC 00000000 00E9B884  1466      move.l  #0,curWin
+00001F54  23FC 00000000 00E9B888  1467      move.l  #0,curLost
+00001F5E  23FC 0000015E 00E9B88C  1468      move.l  #A_FINAL_SCORE_X,curEndLocationX
+00001F68  23FC 00000119 00E9B890  1469      move.l  #A_FINAL_SCORE_Y,curEndLocationY
+00001F72  4EF9 00002334           1470      jmp     .presetsLoaded
+00001F78                          1471  .tryLevel3:
+00001F78  BABC 00000003           1472      cmp.l   #3,d5
+00001F7E  6600 0150               1473      bne     .tryLevel6
+00001F82  23FC 00000000 00E9B848  1474      move.l  #B_PLAY_X_START,playXStart
+00001F8C  23FC 00000000 00E9B84C  1475      move.l  #B_PLAY_Y_START,playYStart      
+00001F96  23FC 00000006 00E9B850  1476      move.l  #B_PLAY_X_START_OFFSET,playXStartOffset
+00001FA0  23FC 00000006 00E9B854  1477      move.l  #B_PLAY_Y_START_OFFSET,playYStartOffset
+00001FAA  23FC 00000244 00E9B858  1478      move.l  #B_PLAY_X_SIZE,playXSize        
+00001FB4  23FC 00000242 00E9B85C  1479      move.l  #B_PLAY_Y_SIZE,playYSize
+00001FBE  23FC 00000244 00E9B860  1480      move.l  #B_PLAY_X_END,playXEnd      
+00001FC8  23FC 00000242 00E9B864  1481      move.l  #B_PLAY_Y_END,playYEnd      
+00001FD2  23FC 00000238 00E9B868  1482      move.l  #B_PLAY_X_END_OFFSET,playXEndOffset 
+00001FDC  23FC 00000236 00E9B86C  1483      move.l  #B_PLAY_Y_END_OFFSET,playYEndOffset 
+00001FE6  23FC 00000074 0000295A  1484      move.l  #B_VACUUM_OFFSET,currentVacuumLineX
+00001FF0  23FC 0000029C 000028C8  1485      move.l  #B_SCORE_X,currentScoreX
+00001FFA  23FC 0000004B 000028CC  1486      move.l  #B_SCORE_Y,currentScoreY
+00002004  23FC 00000294 000028D8  1487      move.l  #B_BULLET_COUNT_X,currentBulletsX
+0000200E  23FC 000001EF 000028DC  1488      move.l  #B_BULLET_COUNT_Y,currentBulletsY
+00002018  23FC 0000026C 000028E4  1489      move.l  #B_THRESHOLD_X,currentThresholdX
+00002022  23FC 0000004B 000028E8  1490      move.l  #B_THRESHOLD_Y,currentThresholdY
+0000202C  23FC 00000200 00002546  1491      move.l  #B_CIRCLE_SPEED,circleSpeed
+00002036  23FC 00000300 0000263A  1492      move.l  #B_BULLET_SPEED,bulletSpeed
+00002040  13FC 0024 00002824      1493      move.b  #B_ASTEROIDSIZE,curAsteroidSize
+00002048  23FC 00000012 00002826  1494      move.l  #B_HALF_ASTEROIDSIZE,curHalfAsteroidSize
+00002052  23FC 00000006 0000282E  1495      move.l  #B_ASTEROID_HEALTH,levelAsteroidHealth
+0000205C  23FC 00001592 00E9B874  1496      move.l  #drawLevel2Asteroids,curDrawAsteroidFunction
+00002066  23FC 00001344 00E9B870  1497      move.l  #drawLevel2Ship,curDrawShipFunction
+00002070  23FC 00FFFFFF 000028BC  1498      move.l  #WHITE,curCounterColor
+0000207A  23FC 005E0E00 000028C0  1499      move.l  #DARKBLUE,curCounterOffColor
+00002084  23FC 00000000 00E9B878  1500      move.l  #0,curMusic
+0000208E  23FC 0000000B 00E9B87C  1501      move.l  #SI_HIT,curHit
+00002098  23FC 00000001 00E9B880  1502      move.l  #SI_SHOOT,curShoot
+000020A2  23FC 00000000 00E9B884  1503      move.l  #0,curWin
+000020AC  23FC 00000000 00E9B888  1504      move.l  #0,curLost
+000020B6  23FC 00000122 00E9B88C  1505      move.l  #B_FINAL_SCORE_X,curEndLocationX
+000020C0  23FC 00000121 00E9B890  1506      move.l  #B_FINAL_SCORE_Y,curEndLocationY
+000020CA  4EF9 00002334           1507      jmp     .presetsLoaded
+000020D0                          1508  .tryLevel6:
+000020D0  BABC 00000006           1509      cmp.l   #6,d5
+000020D6  6600 0134               1510      bne     .tryLevel8
+000020DA  23FC 00000096 00E9B848  1511      move.l  #C_PLAY_X_START,playXStart
+000020E4  23FC 00000000 00E9B84C  1512      move.l  #C_PLAY_Y_START,playYStart      
+000020EE  23FC 0000009C 00E9B850  1513      move.l  #C_PLAY_X_START_OFFSET,playXStartOffset
+000020F8  23FC 00000006 00E9B854  1514      move.l  #C_PLAY_Y_START_OFFSET,playYStartOffset
+00002102  23FC 0000036A 00E9B858  1515      move.l  #C_PLAY_X_SIZE,playXSize        
+0000210C  23FC 00000300 00E9B85C  1516      move.l  #C_PLAY_Y_SIZE,playYSize
+00002116  23FC 00000400 00E9B860  1517      move.l  #C_PLAY_X_END,playXEnd      
+00002120  23FC 00000300 00E9B864  1518      move.l  #C_PLAY_Y_END,playYEnd      
+0000212A  23FC 000003F4 00E9B868  1519      move.l  #C_PLAY_X_END_OFFSET,playXEndOffset 
+00002134  23FC 000002F4 00E9B86C  1520      move.l  #C_PLAY_Y_END_OFFSET,playYEndOffset 
+0000213E  23FC 00000144 0000295A  1521      move.l  #C_VACUUM_OFFSET,currentVacuumLineX
+00002148  23FC 00000078 000028C8  1522      move.l  #C_SCORE_X,currentScoreX
+00002152  23FC 000002D0 000028CC  1523      move.l  #C_SCORE_Y,currentScoreY
+0000215C  23FC 00000019 000028D8  1524      move.l  #C_BULLET_COUNT_X,currentBulletsX
+00002166  23FC 000002D0 000028DC  1525      move.l  #C_BULLET_COUNT_Y,currentBulletsY
+00002170  23FC 00000046 000028E4  1526      move.l  #C_THRESHOLD_X,currentThresholdX
+0000217A  23FC 000002D0 000028E8  1527      move.l  #C_THRESHOLD_Y,currentThresholdY
+00002184  23FC 00000240 00002546  1528      move.l  #C_CIRCLE_SPEED,circleSpeed
+0000218E  23FC 00000380 0000263A  1529      move.l  #C_BULLET_SPEED,bulletSpeed
+00002198  23FC 000015CE 00E9B874  1530      move.l  #drawLevel3Asteroids,curDrawAsteroidFunction
+000021A2  23FC 000013AA 00E9B870  1531      move.l  #drawLevel3Ship,curDrawShipFunction
+000021AC  23FC 0000F2FF 000028BC  1532      move.l  #YELLOW,curCounterColor
+000021B6  23FC 00003F34 000028C0  1533      move.l  #DARKYELLOW,curCounterOffColor
+000021C0  23FC 00000002 00E9B878  1534      move.l  #SF_MUSIC,curMusic
+000021CA  23FC 00000005 00E9B87C  1535      move.l  #SF_HIT,curHit
+000021D4  23FC 00000000 00E9B880  1536      move.l  #0,curShoot
+000021DE  23FC 00000003 00E9B884  1537      move.l  #SF_WIN,curWin
+000021E8  23FC 00000004 00E9B888  1538      move.l  #SF_LOSE,curLost
+000021F2  23FC 0000024B 00E9B88C  1539      move.l  #C_FINAL_SCORE_X,curEndLocationX
+000021FC  23FC 00000180 00E9B890  1540      move.l  #C_FINAL_SCORE_Y,curEndLocationY
+00002206  4EF9 00002334           1541      jmp     .presetsLoaded
+0000220C                          1542  .tryLevel8:
+0000220C  BABC 00000008           1543      cmp.l   #8,d5
+00002212  6600 0120               1544      bne     .presetsLoaded
+00002216  23FC 000000E6 00E9B848  1545      move.l  #D_PLAY_X_START,playXStart
+00002220  23FC 00000000 00E9B84C  1546      move.l  #D_PLAY_Y_START,playYStart      
+0000222A  23FC 000000EC 00E9B850  1547      move.l  #D_PLAY_X_START_OFFSET,playXStartOffset
+00002234  23FC 00000006 00E9B854  1548      move.l  #D_PLAY_Y_START_OFFSET,playYStartOffset
+0000223E  23FC 000003EE 00E9B858  1549      move.l  #D_PLAY_X_SIZE,playXSize        
+00002248  23FC 000002D0 00E9B85C  1550      move.l  #D_PLAY_Y_SIZE,playYSize
+00002252  23FC 000004D4 00E9B860  1551      move.l  #D_PLAY_X_END,playXEnd      
+0000225C  23FC 000002D0 00E9B864  1552      move.l  #D_PLAY_Y_END,playYEnd      
+00002266  23FC 000004C8 00E9B868  1553      move.l  #D_PLAY_X_END_OFFSET,playXEndOffset 
+00002270  23FC 000002C4 00E9B86C  1554      move.l  #D_PLAY_Y_END_OFFSET,playYEndOffset 
+0000227A  23FC 000001AF 0000295A  1555      move.l  #D_VACUUM_OFFSET,currentVacuumLineX
+00002284  23FC 000004C4 000028C8  1556      move.l  #D_SCORE_X,currentScoreX
+0000228E  23FC 0000002D 000028CC  1557      move.l  #D_SCORE_Y,currentScoreY
+00002298  23FC 000004C4 000028D8  1558      move.l  #D_BULLET_COUNT_X,currentBulletsX
+000022A2  23FC 00000258 000028DC  1559      move.l  #D_BULLET_COUNT_Y,currentBulletsY
+000022AC  23FC 000004C4 000028E4  1560      move.l  #D_THRESHOLD_X,currentThresholdX
+000022B6  23FC 00000163 000028E8  1561      move.l  #D_THRESHOLD_Y,currentThresholdY
+000022C0  23FC 00000280 00002546  1562      move.l  #D_CIRCLE_SPEED,circleSpeed
+000022CA  23FC 00000400 0000263A  1563      move.l  #D_BULLET_SPEED,bulletSpeed
+000022D4  23FC 0000FF00 000028BC  1564      move.l  #GREEN,curCounterColor
+000022DE  23FC 000E3E00 000028C0  1565      move.l  #DARKGREEN,curCounterOffColor
+000022E8  23FC 00000006 00E9B878  1566      move.l  #FINAL_MUSIC,curMusic
+000022F2  23FC 00000008 00E9B87C  1567      move.l  #FINAL_HIT,curHit
+000022FC  23FC 00000007 00E9B880  1568      move.l  #FINAL_SHOOT,curShoot
+00002306  23FC 00000009 00E9B884  1569      move.l  #FINAL_WIN,curWin
+00002310  23FC 0000000A 00E9B888  1570      move.l  #FINAL_LOSE,curLost
+0000231A  23FC 000002DD 00E9B88C  1571      move.l  #D_FINAL_SCORE_X,curEndLocationX
+00002324  23FC 00000168 00E9B890  1572      move.l  #D_FINAL_SCORE_Y,curEndLocationY
+0000232E  4EF9 00002334           1573      jmp     .presetsLoaded
+00002334                          1574  .presetsLoaded:
+00002334  4E75                    1575      rts
+00002336                          1576  
+00002336                          1577  ;Will read from "currentLevel"
+00002336                          1578  startLevel:
+00002336  4EB8 19AC               1579      jsr     nukeBullets
+0000233A  4EB8 19C4               1580      jsr     nukeAsteroids
+0000233E  4EB8 1E10               1581      jsr     loadLevelPresets
+00002342  4EB8 1CDE               1582      jsr     changeMapIfNecessary
+00002346  4EB8 1220               1583      jsr     resetCircleLocation
+0000234A                          1584  
+0000234A  2039 000028EE           1585      move.l  currentLevel,d0
+00002350  5340                    1586      subq    #1,d0
+00002352  E588                    1587      lsl.l   #2,d0
+00002354                          1588  
+00002354  41F9 00002916           1589      lea     levelThresholds,a0
+0000235A  23F0 0000 000028E0      1590      move.l  (a0,d0),pointsThreshold
+00002362                          1591  
+00002362  41F9 000028F2           1592      lea     asteroidsPerLevel,a0
+00002368  2A30 0000               1593      move.l  (a0,d0),d5
+0000236C                          1594  .spawnAsts:
+0000236C  4EB8 1498               1595      jsr     spawnRandomAsteroid
+00002370  5345                    1596      subq    #1,d5
+00002372  66F8                    1597      bne     .spawnAsts
+00002374                          1598  
+00002374  2239 00E9B878           1599      move.l  curMusic,d1
+0000237A  4EB9 000023EC           1600      jsr     startMusic
+00002380                          1601  
+00002380  7008                    1602      moveq   #GET_TIME_TRAP_CODE,d0  ;Reset time for the next level, so we don't have a massive time skip
+00002382  4E4F                    1603      trap    #15
+00002384  23C1 0000263E           1604      move.l  d1,lastIterTime
+0000238A  4E75                    1605      rts
+0000238C                          1606  
+0000238C                          1607  playShoot:
+0000238C  48E7 FFFE               1608      movem.l ALL_REG,-(sp)
+00002390  2239 00E9B880           1609      move.l  curShoot,d1
+00002396  6700 0006               1610      beq     .noSound
+0000239A  704B                    1611      moveq   #75,d0
+0000239C  4E4F                    1612      trap    #15
+0000239E                          1613  .noSound
+0000239E  4CDF 7FFF               1614      movem.l (sp)+,ALL_REG
+000023A2  4E75                    1615      rts
+000023A4                          1616  
+000023A4                          1617  playWin:
+000023A4  48E7 FFFE               1618      movem.l ALL_REG,-(sp)
+000023A8  2239 00E9B884           1619      move.l  curWin,d1
+000023AE  6700 0006               1620      beq     .noSound
+000023B2  704B                    1621      moveq   #75,d0
+000023B4  4E4F                    1622      trap    #15
+000023B6                          1623  .noSound
+000023B6  4CDF 7FFF               1624      movem.l (sp)+,ALL_REG
+000023BA  4E75                    1625      rts
+000023BC                          1626  
+000023BC                          1627  playLose:
+000023BC  48E7 FFFE               1628      movem.l ALL_REG,-(sp)
+000023C0  2239 00E9B888           1629      move.l  curLost,d1
+000023C6  6700 0006               1630      beq     .noSound
+000023CA  704B                    1631      moveq   #75,d0
+000023CC  4E4F                    1632      trap    #15
+000023CE                          1633  .noSound
+000023CE  4CDF 7FFF               1634      movem.l (sp)+,ALL_REG
+000023D2  4E75                    1635      rts
+000023D4                          1636  
+000023D4                          1637  playHit:
+000023D4  48E7 FFFE               1638      movem.l ALL_REG,-(sp)
+000023D8  2239 00E9B87C           1639      move.l  curHit,d1
+000023DE  6700 0006               1640      beq     .noSound
+000023E2  704B                    1641      moveq   #75,d0
+000023E4  4E4F                    1642      trap    #15
+000023E6                          1643  .noSound
+000023E6  4CDF 7FFF               1644      movem.l (sp)+,ALL_REG
+000023EA  4E75                    1645      rts
+000023EC                          1646  
+000023EC                          1647  startMusic:
+000023EC  2001                    1648      move.l  d1,d0
+000023EE  6700 0008               1649      beq     .noSound
+000023F2  7400                    1650      move.l  #0,d2
+000023F4  704D                    1651      moveq   #77,d0
+000023F6  4E4F                    1652      trap    #15
+000023F8                          1653  .noSound
+000023F8  4E75                    1654      rts
+000023FA                          1655  
+000023FA                          1656  stopMusic:
+000023FA  2001                    1657      move.l  d1,d0
+000023FC  6700 0008               1658      beq     .noSound
+00002400  7402                    1659      move.l  #2,d2
+00002402  704D                    1660      moveq   #77,d0
+00002404  4E4F                    1661      trap    #15
+00002406                          1662  .noSound
+00002406  4E75                    1663      rts
+00002408                          1664  
+00002408                          1665  ;Initial sound load. Should only be called once
+00002408                          1666  loadSounds
+00002408  43F9 000024AE           1667      lea     siShootSound,a1
+0000240E  7201                    1668      moveq   #SI_SHOOT,d1
+00002410  4EB9 000024A4           1669      jsr     loadSound
+00002416                          1670  
+00002416  43F9 000024BA           1671      lea     siHit,a1
+0000241C  720B                    1672      moveq   #SI_HIT,d1
+0000241E  4EB9 000024A4           1673      jsr     loadSound
+00002424                          1674  
+00002424  43F9 000024D9           1675      lea     sfMusic,a1
+0000242A  7202                    1676      moveq   #SF_MUSIC,d1
+0000242C  4EB9 000024A4           1677      jsr     loadSound
+00002432                          1678  
+00002432  43F9 000024C4           1679      lea     sfWin,a1
+00002438  7203                    1680      moveq   #SF_WIN,d1
+0000243A  4EB9 000024A4           1681      jsr     loadSound
+00002440                          1682  
+00002440  43F9 000024CE           1683      lea     sfLose,a1
+00002446  7204                    1684      moveq   #SF_LOSE,d1
+00002448  4EB9 000024A4           1685      jsr     loadSound
+0000244E                          1686  
+0000244E  43F9 000024E5           1687      lea     sfHit,a1
+00002454  7205                    1688      moveq   #SF_HIT,d1
+00002456  4EB9 000024A4           1689      jsr     loadSound
+0000245C                          1690  
+0000245C  43F9 000024EF           1691      lea     finalMusic,a1
+00002462  7206                    1692      moveq   #FINAL_MUSIC,d1
+00002464  4EB9 000024A4           1693      jsr     loadSound
+0000246A                          1694  
+0000246A  43F9 000024FE           1695      lea     finalShoot,a1
+00002470  7207                    1696      moveq   #FINAL_SHOOT,d1
+00002472  4EB9 000024A4           1697      jsr     loadSound
+00002478                          1698  
+00002478  43F9 00002528           1699      lea     finalHit,a1
+0000247E  7208                    1700      moveq   #FINAL_HIT,d1
+00002480  4EB9 000024A4           1701      jsr     loadSound
+00002486                          1702  
+00002486  43F9 0000250D           1703      lea     finalWin,a1
+0000248C  7209                    1704      moveq   #FINAL_WIN,d1
+0000248E  4EB9 000024A4           1705      jsr     loadSound
+00002494                          1706  
+00002494  43F9 0000251A           1707      lea     finalLose,a1
+0000249A  720A                    1708      moveq   #FINAL_LOSE,d1
+0000249C  4EB9 000024A4           1709      jsr     loadSound
+000024A2  4E75                    1710      rts
+000024A4                          1711  
+000024A4                          1712  ;Helper function for loadSounds
+000024A4                          1713  loadSound
+000024A4  704A                    1714      moveq   #74,d0          ;load the sound into directx memory
+000024A6  4E4F                    1715      trap    #15
+000024A8  4E75                    1716      rts
+000024AA                          1717  
+000024AA                          1718  end:
+000024AA  FFFF FFFF               1719      SIMHALT             ; halt simulator
+000024AE                          1720      
+000024AE                          1721  siShootSound
+000024AE= 73 69 53 68 6F 6F ...   1722      dc.b    'siShoot.wav',$00
+000024BA                          1723  siHit
+000024BA= 73 69 48 69 74 2E ...   1724      dc.b    'siHit.wav',$00
+000024C4                          1725  sfWin
+000024C4= 73 66 57 69 6E 2E ...   1726      dc.b    'sfWin.wav',$00
+000024CE                          1727  sfLose
+000024CE= 73 66 4C 6F 73 65 ...   1728      dc.b    'sfLose.wav',$00
+000024D9                          1729  sfMusic
+000024D9= 73 66 4D 75 73 69 ...   1730      dc.b    'sfMusic.wav',$00
+000024E5                          1731  sfHit
+000024E5= 73 66 48 69 74 2E ...   1732      dc.b    'sfHit.wav',$00
+000024EF                          1733  finalMusic
+000024EF= 66 69 6E 61 6C 4D ...   1734      dc.b    'finalMusic.wav',$00
+000024FE                          1735  finalShoot
+000024FE= 66 69 6E 61 6C 53 ...   1736      dc.b    'finalShoot.wav',$00
+0000250D                          1737  finalWin
+0000250D= 66 69 6E 61 6C 57 ...   1738      dc.b    'finalWin.wav',$00
+0000251A                          1739  finalLose
+0000251A= 66 69 6E 61 6C 4C ...   1740      dc.b    'finalLose.wav',$00
+00002528                          1741  finalHit
+00002528= 66 69 6E 61 6C 48 ...   1742      dc.b    'finalHit.wav',$00
+00002535                          1743  
+00002536= 00000000                1744  circleXLocation     dc.l    0
+0000253A= 00000000                1745  circleYLocation     dc.l    0
+0000253E= 00000000                1746  circleVelocity      dc.l    0
+00002542= 00000000                1747  halfCircleSize      dc.l    0
+00002546= 00000160                1748  circleSpeed         dc.l    $0160
+0000254A                          1749  
+0000254A                          1750  ;Mouse Inputs per iteration
+0000254A= 0000                    1751  mouseXLocation      dc.w    0
+0000254C= 0000                    1752  mouseYLocation      dc.w    0
+0000254E= 01                      1753  mouseDown           dc.b    1
+0000254F                          1754  
+0000254F                          1755  ;Bullet X and Y location
+00002550                          1756  bullet              ds.l    BULLET_COUNT*BULLET_SIZE_IN_MEMORY
+00002630= 00                      1757  spawnBullet         dc.b    0
+00002632= 00000100                1758  curBulletXPower     dc.l    $0100   
+00002636= 00000010                1759  curBulletYPower     dc.l    $0010   
+0000263A= 00000300                1760  bulletSpeed         dc.l    $0300
+0000263E                          1761  
+0000263E                          1762  ;Clock Cycles
+0000263E= 00000000                1763  lastIterTime        dc.l    0
+00002642= 0000                    1764  deltaTime           dc.w    0
+00002644                          1765  
+00002644                          1766  asteroids           ds.l    MAX_ASTEROID_COUNT*ASTEROID_SIZE_IN_MEMORY
+00002824= 28                      1767  curAsteroidSize     dc.b    40
+00002826= 00000014                1768  curHalfAsteroidSize dc.l    20
+0000282A= 00000001                1769  curAsteroidGravity  dc.l    $0001
+0000282E= 00000005                1770  levelAsteroidHealth dc.l    5
+00002832                          1771  
+00002832= 77 12 5D 5B 3A 6B ...   1772  sevenSegmentList    dc.b    $77,$12,$5D,$5B,$3A,$6B,$2F,$52,$7F,$7A
+0000283C                          1773  
+0000283C= FFFFFFF6 FFFFFFFF ...   1774  segmentStartXLocs   dc.l    -10,-1,-1,0,8,8,10
+00002858= FFFFFFF6 FFFFFFF8 ...   1775  segmentEndXLocs     dc.l    -10,-8,-8,0,1,1,10
+00002874= 00000006 00000006 ...   1776  segmentStartYLocs   dc.l    6,6,-6,6,6,-6,6
+00002890= FFFFFFFA 00000006 ...   1777  segmentEndYLocs     dc.l    -6,6,-6,-6,6,-6,-6
+000028AC                          1778  
+000028AC= 00000000                1779  segmentCenterX      dc.l    0
+000028B0= 00000000                1780  segmentCenterY      dc.l    0
+000028B4                          1781  
+000028B4= 00000064                1782  screenSegmentXLoc   dc.l    100
+000028B8= 00000064                1783  screenSegmentYLoc   dc.l    100
+000028BC                          1784  
+000028BC= 000000FF                1785  curCounterColor     dc.l    RED
+000028C0= 000E003E                1786  curCounterOffColor  dc.l    MAROON
+000028C4= 00000000                1787  currentScore        dc.l    0
+000028C8= 000001E5                1788  currentScoreX       dc.l    485
+000028CC= 0000002D                1789  currentScoreY       dc.l    45
+000028D0= 00000000                1790  totalScore          dc.l    0
+000028D4                          1791  
+000028D4= 00000007                1792  currentBullets      dc.l    BULLET_COUNT
+000028D8= 0000012C                1793  currentBulletsX     dc.l    300
+000028DC= 0000002D                1794  currentBulletsY     dc.l    45
+000028E0                          1795  
+000028E0= 00000005                1796  pointsThreshold     dc.l    5
+000028E4= 0000012C                1797  currentThresholdX   dc.l    300
+000028E8= 0000002D                1798  currentThresholdY   dc.l    45
+000028EC                          1799  
+000028EC= 00                      1800  isLevelOver         dc.b    0
+000028ED= 00                      1801  oddBitFixer         dc.b    0
+000028EE                          1802  
+000028EE= 00000001                1803  currentLevel        dc.l    1
+000028F2= 00000001 00000002 ...   1804  asteroidsPerLevel   dc.l    1,2,3,3,4,4,5,5,6
+00002916= 00000002 00000004 ...   1805  levelThresholds     dc.l    2,4,5,5,6,6,6,6,6
+0000293A                          1806  
+0000293A= 00000280                1807  level1X             dc.l    640
+0000293E= 000001E0                1808  level1Y             dc.l    480
+00002942                          1809  
+00002942= 000002D0                1810  level2X             dc.l    720
+00002946= 00000240                1811  level2Y             dc.l    576
+0000294A                          1812  
+0000294A= 00000400                1813  level3X             dc.l    1024
+0000294E= 00000300                1814  level3Y             dc.l    768
+00002952                          1815  
+00002952= 00000500                1816  level4X             dc.l    1280
+00002956= 000002D0                1817  level4Y             dc.l    720
+0000295A                          1818  
+0000295A= 000000B4                1819  currentVacuumLineX  dc.l    A_PLAY_X_START+(A_PLAY_X_SIZE/5)
+0000295E= 00FFFFFF                1820  currentVacuumLineColor  dc.l    WHITE
+00002962                          1821  
+00002962                          1822  titleScreen:        INCBIN "titleScreen.bmp"
+000E3998                          1823  loadScreen80:       INCBIN "loading80.bmp"
+002432CE                          1824  loadScreen90:       INCBIN "loading90.bmp"
+003A2C04                          1825  loadScreen00:       INCBIN "loading00.bmp"
+0050253A                          1826  youWinBmp:          INCBIN "youWin.bmp"
+00503832                          1827  youWinFinalBmp:     INCBIN "finalWinScreen.bmp"
+007A6868                          1828  youLoseBmp:         INCBIN "youLose.bmp"
+007A7B60                          1829  level1Bmp:          INCBIN "level1.bmp"
+00888B98                          1830  level2Bmp:          INCBIN "level2.bmp"
+009B87D0                          1831  level3Bmp:          INCBIN "level3.bmp"
+00BF8808                          1832  level4Bmp:          INCBIN "level4.bmp"
+00E9B840                          1833  
+00E9B840= 00000280                1834  screenXSize             dc.l    640
+00E9B844= 000001E0                1835  screenYSize             dc.l    480
+00E9B848= 0000004D                1836  playXStart              dc.l    77
+00E9B84C= 00000059                1837  playYStart              dc.l    89
+00E9B850= 0000004A                1838  playXStartOffset        dc.l    A_PLAY_X_START+(CIRCLE_SIZE/2)
+00E9B854= 0000004A                1839  playYStartOffset        dc.l    A_PLAY_X_START+(CIRCLE_SIZE/2)
+00E9B858= 0000027A                1840  playXSize               dc.l    634
+00E9B85C= 00000180                1841  playYSize               dc.l    384
+00E9B860= 00000278                1842  playXEnd                dc.l    A_PLAY_X_START+A_PLAY_X_SIZE
+00E9B864= 000001C4                1843  playYEnd                dc.l    A_PLAY_X_START+A_PLAY_Y_SIZE
+00E9B868= 0000026C                1844  playXEndOffset          dc.l    A_PLAY_X_END-(CIRCLE_SIZE)
+00E9B86C= 000001CD                1845  playYEndOffset          dc.l    A_PLAY_Y_END-(CIRCLE_SIZE)
+00E9B870                          1846  
+00E9B870                          1847  ;Dynamic draw functions
+00E9B870= 00001326                1848  curDrawShipFunction         dc.l    drawShip
+00E9B874= 00001556                1849  curDrawAsteroidFunction     dc.l    drawAsteroids
+00E9B878                          1850  
+00E9B878                          1851  ;Audio Files
+00E9B878= 00000000                1852  curMusic                    dc.l    0
+00E9B87C= 00000000                1853  curHit                      dc.l    0
+00E9B880= 00000000                1854  curShoot                    dc.l    0
+00E9B884= 00000000                1855  curWin                      dc.l    0
+00E9B888= 00000000                1856  curLost                     dc.l    0
+00E9B88C                          1857  
+00E9B88C= 00000000                1858  curEndLocationX             dc.l    0
+00E9B890= 00000000                1859  curEndLocationY             dc.l    0
+00E9B894                          1860  
+00E9B894                          1861  
+00E9B894                          1862  
+00E9B894                          1863  * Put variables and constants here
+00E9B894                          1864  
+00E9B894                          1865      INCLUDE "BMPSubroutine.x68"
+00E9B894                          1866  
+00E9B894                          1867  ALL_REG                     REG     D0-D7/A0-A6
+00E9B894  =00000050               1868  PEN_COLOR_TRAP_CODE         EQU     80
+00E9B894  =00000052               1869  DRAW_PIXEL_TRAP_CODE        EQU     82
+00E9B894  =0000000E               1870  BMP_HEADER_SIZE             EQU     14
+00E9B894                          1871  
+00E9B894  =00000000               1872  X_MAIN_DRAW                 EQU     0
+00E9B894  =00000000               1873  Y_MAIN_DRAW                 EQU     0
+00E9B894  =000000FF               1874  X_BMP_DRAW_LOC              EQU     $FF
+00E9B894  =0000000A               1875  Y_BMP_DRAW_LOC              EQU     10
+00E9B894  =00000064               1876  X_DRAW_SIZE                 EQU     100
+00E9B894  =00000064               1877  Y_DRAW_SIZE                 EQU     100
+00E9B894                          1878  
+00E9B894                          1879  
+00E9B894  7021                    1880      move.l  #33,d0
+00E9B896  323C 02D0               1881      move.w  #720,d1
+00E9B89A  4841                    1882      swap    d1
+00E9B89C  323C 01E0               1883      move.w  #480,d1
+00E9B8A0  4E4F                    1884      trap #15
+00E9B8A2                          1885  
+00E9B8A2                          1886  main:
+00E9B8A2  701C                    1887      move.l      #28,d0
+00E9B8A4  9FC0                    1888      sub.l       d0,sp                   ;prepare stack for two 4 byte arguments
+00E9B8A6  2EBC 00E9BB20           1889      move.l      #BmpToDraw,(sp)
+00E9B8AC  2F7C 00000000 0004      1890      move.l      #X_MAIN_DRAW,4(sp)      ;set the values of the arguments
+00E9B8B4  2F7C 00000000 0008      1891      move.l      #Y_MAIN_DRAW,8(sp)
+00E9B8BC  2F7C 000000FF 000C      1892      move.l      #X_BMP_DRAW_LOC,12(sp)  ;set the values of the arguments
+00E9B8C4  2F7C 0000000A 0010      1893      move.l      #Y_BMP_DRAW_LOC,16(sp)
+00E9B8CC  2F7C 00000064 0014      1894      move.l      #X_DRAW_SIZE,20(sp)     ;set the values of the arguments
+00E9B8D4  2F7C 00000064 0018      1895      move.l      #Y_DRAW_SIZE,24(sp)
+00E9B8DC                          1896      
+00E9B8DC  4EB9 00E9B8E8           1897      jsr drawBmp
+00E9B8E2  701C                    1898      move.l      #28,d0
+00E9B8E4  DFC0                    1899      add.l       d0,sp
+00E9B8E6  4E75                    1900      rts
+00E9B8E8                          1901  
+00E9B8E8                          1902      ;jmp end
+00E9B8E8                          1903      
+00E9B8E8                          1904  
+00E9B8E8                          1905  drawBmp:
+00E9B8E8  206F 0004               1906          move.l  4(sp),a0
+00E9B8EC  23C8 00F7CB8C           1907          move.l  a0,bmpAddr
+00E9B8F2  23EF 0008 00F7CB74      1908          move.l  8(sp),xMainDraw
+00E9B8FA  23EF 000C 00F7CB78      1909          move.l  12(sp),yMainDraw
+00E9B902  23EF 0010 00F7CB7C      1910          move.l  16(sp),xBmpDrawLoc
+00E9B90A  23EF 0014 00F7CB80      1911          move.l  20(sp),yBmpDrawLoc
+00E9B912  23EF 0018 00F7CB84      1912          move.l  24(sp),xDrawSize
+00E9B91A  23EF 001C 00F7CB88      1913          move.l  28(sp),yDrawSize
+00E9B922                          1914          
+00E9B922                          1915          
+00E9B922                          1916  
+00E9B922  48E7 FFFE               1917          movem.l ALL_REG,-(sp)
+00E9B926  4280                    1918          clr.l   d0
+00E9B928  4281                    1919          clr.l   d1
+00E9B92A  4282                    1920          clr.l   d2      
+00E9B92C  4283                    1921          clr.l   d3
+00E9B92E  4284                    1922          clr.l   d4
+00E9B930  4285                    1923          clr.l   d5
+00E9B932  4286                    1924          clr.l   d6
+00E9B934  4287                    1925          clr.l   d7
+00E9B936  2079 00F7CB8C           1926          move.l     bmpAddr, a0
+00E9B93C                          1927          
+00E9B93C  2228 000A               1928          move.l  10(a0),d1
+00E9B940  4EB9 00E9BB18           1929          jsr fromLittleEndToBigEnd
+00E9B946  23C1 00F7CB5E           1930          move.l  d1,imageDataOffset
+00E9B94C                          1931          
+00E9B94C  2228 0012               1932          move.l  18(a0),d1
+00E9B950  4EB9 00E9BB18           1933          jsr fromLittleEndToBigEnd
+00E9B956  23C1 00F7CB62           1934          move.l  d1,imageWidth
+00E9B95C                          1935          
+00E9B95C  2228 0016               1936          move.l  22(a0),d1
+00E9B960  4EB9 00E9BB18           1937          jsr fromLittleEndToBigEnd
+00E9B966  23C1 00F7CB66           1938          move.l  d1,imageHeight
+00E9B96C                          1939  
+00E9B96C  3228 001C               1940          move.w  28(a0),d1
+00E9B970  E159                    1941          rol.w   #8,d1
+00E9B972  33C1 00F7CB58           1942          move.w  d1,bitsPerPixel
+00E9B978                          1943  
+00E9B978  2228 002E               1944          move.l  46(a0),d1
+00E9B97C  4EB9 00E9BB18           1945          jsr fromLittleEndToBigEnd
+00E9B982  23C1 00F7CB5A           1946          move.l  d1,palleteSize
+00E9B988                          1947          
+00E9B988  4241                    1948          clr     d1
+00E9B98A  3239 00F7CB58           1949          move.w  bitsPerPixel,d1
+00E9B990  E649                    1950          lsr.w   #3,d1
+00E9B992  2439 00F7CB62           1951          move.l  imageWidth,d2
+00E9B998  C2C2                    1952          mulu.w  d2,d1
+00E9B99A  C23C 0003               1953          and.b   #3,d1
+00E9B99E  163C 0004               1954          move.b  #4,d3
+00E9B9A2  9601                    1955          sub.b   d1,d3
+00E9B9A4  B67C 0004               1956          cmp     #4,d3
+00E9B9A8  6600 0004               1957          bne doneWithOffset  ;Gotta check if offset is 4. If so, clear it.
+00E9B9AC  4243                    1958          clr d3
+00E9B9AE                          1959  doneWithOffset:
+00E9B9AE  13C3 00F7CB6A           1960          move.b  d3,rowOffset
+00E9B9B4                          1961          
+00E9B9B4  2039 00F7CB7C           1962          move.l  xBmpDrawLoc,d0  ;If this is FF (useless in application), we just use the entire image)
+00E9B9BA  B0BC 000000FF           1963          cmp.l   #$FF,d0
+00E9B9C0  6600 002A               1964          bne     useChunk
+00E9B9C4  23FC 00000000 00F7CB7C  1965          move.l  #0,xBmpDrawLoc
+00E9B9CE  23FC 00000000 00F7CB80  1966          move.l  #0,yBmpDrawLoc
+00E9B9D8  23F9 00F7CB62 00F7CB84  1967          move.l  imageWidth,xDrawSize
+00E9B9E2  23F9 00F7CB66 00F7CB88  1968          move.l  imageHeight,yDrawSize
+00E9B9EC                          1969          
+00E9B9EC                          1970          
+00E9B9EC                          1971  useChunk:
+00E9B9EC                          1972          ;Calculating Row size in bytes
+00E9B9EC  3239 00F7CB58           1973          move.w  bitsPerPixel,d1
+00E9B9F2  E649                    1974          lsr.w   #3,d1
+00E9B9F4  2439 00F7CB62           1975          move.l  imageWidth,d2
+00E9B9FA  C2C2                    1976          mulu.w  d2,d1           ;offset + (bits per pixel X pixels across) = pixels in a row
+00E9B9FC  D283                    1977          add.l   d3,d1           ;Adding offset
+00E9B9FE  23C1 00F7CB70           1978          move.l  d1,rowSizeInBytes
+00E9BA04                          1979          ;Done Calcing Row Size
+00E9BA04                          1980          
+00E9BA04  D1F9 00F7CB5E           1981          add.l   imageDataOffset,a0  ;moving address to pixel data
+00E9BA0A                          1982          
+00E9BA0A  2479 00F7CB84           1983          move.l  xDrawSize,a2     ;The amount we're drawing toward  
+00E9BA10  D5F9 00F7CB74           1984          add.l   xMainDraw,a2     ;Offset for drawing chunk requested
+00E9BA16                          1985          
+00E9BA16  2679 00F7CB88           1986          move.l  yDrawSize,a3     ;Keep in mind, these are the MAX X/Y draw points
+00E9BA1C  D7F9 00F7CB78           1987          add.l   yMainDraw,a3
+00E9BA22                          1988          
+00E9BA22  2439 00F7CB74           1989          move.l  xMainDraw,d2     ;These are the actual draw coords. Start at the offset
+00E9BA28  260B                    1990          move.l  a3,d3     ;This one's special, becase we draw bottom to top. Start at max, not min
+00E9BA2A                          1991          
+00E9BA2A  2039 00F7CB7C           1992          move.l  xBmpDrawLoc,d0  ;Moving DRAW_LOC bytes to the right X Location
+00E9BA30  3239 00F7CB58           1993          move.w  bitsPerPixel,d1
+00E9BA36  E689                    1994          lsr.l   #3,d1
+00E9BA38  C0C1                    1995          mulu.w  d1,d0
+00E9BA3A  D1C0                    1996          add.l   d0,a0
+00E9BA3C                          1997          
+00E9BA3C  2039 00F7CB70           1998          move.l  rowSizeInBytes,d0
+00E9BA42  C0F9 00F7CB80           1999          mulu.w  yBmpDrawLoc,d0
+00E9BA48  D1C0                    2000          add.l   d0,a0               ;Moving DRAW_LOC bytes to the right Y Location
+00E9BA4A                          2001          
+00E9BA4A                          2002          ;Choosing between indexed BMP or not
+00E9BA4A  3239 00F7CB58           2003          move.w  bitsPerPixel,d1
+00E9BA50  B27C 0008               2004          cmp.w   #8,d1
+00E9BA54  6700 0008               2005          beq     palleteFunctionBranch
+00E9BA58  4EF9 00E9BA6A           2006          jmp     noPalleteFunctionBranch
+00E9BA5E                          2007  palleteFunctionBranch:
+00E9BA5E  4EB9 00E9BAB8           2008          jsr     colorPalleteBmp
+00E9BA64  4CDF 7FFF               2009          movem.l (sp)+,ALL_REG
+00E9BA68  4E75                    2010          rts
+00E9BA6A                          2011  noPalleteFunctionBranch:
+00E9BA6A  4EB9 00E9BA76           2012          jsr     drawPixels
+00E9BA70  4CDF 7FFF               2013          movem.l (sp)+,ALL_REG
+00E9BA74  4E75                    2014          rts
+00E9BA76                          2015          
+00E9BA76                          2016  drawPixels:
+00E9BA76                          2017          ;AT THIS POINT:
+00E9BA76                          2018          ;a2 is MAX X DRAW LOC
+00E9BA76                          2019          ;a3 is MAX Y DRAW LOC
+00E9BA76                          2020          ;d1 is COLOR REGISTER
+00E9BA76                          2021          ;d2 is CUR X DRAW LOC
+00E9BA76                          2022          ;d3 is CUR Y DRAW LOC
+00E9BA76  4241                    2023          clr     d1
+00E9BA78  1218                    2024          move.b  (a0)+,d1
+00E9BA7A  E189                    2025          lsl.l   #08,d1
+00E9BA7C  1218                    2026          move.b  (a0)+,d1
+00E9BA7E  E189                    2027          lsl.l   #08,d1
+00E9BA80  1218                    2028          move.b  (a0)+,d1
+00E9BA82                          2029  
+00E9BA82  4EB9 00E9BB06           2030          jsr drawPixel
+00E9BA88  5282                    2031          add.l   #1,d2
+00E9BA8A  B5C2                    2032          cmp.l   d2,a2
+00E9BA8C  66E8                    2033          bne drawPixels
+00E9BA8E                          2034          
+00E9BA8E  91F9 00F7CB84           2035          sub.l   xDrawSize,a0 ;Cheating a little. I know at this point the bytePerPixel is 3, so just do 3 subs.
+00E9BA94  91F9 00F7CB84           2036          sub.l   xDrawSize,a0
+00E9BA9A  91F9 00F7CB84           2037          sub.l   xDrawSize,a0
+00E9BAA0                          2038  
+00E9BAA0  D1F9 00F7CB70           2039          add.l   rowSizeInBytes,a0
+00E9BAA6  2439 00F7CB74           2040          move.l  xMainDraw,d2
+00E9BAAC  5383                    2041          sub.l   #1,d3
+00E9BAAE  B6B9 00F7CB78           2042          cmp.l   yMainDraw,d3
+00E9BAB4  66C0                    2043          bne drawPixels
+00E9BAB6  4E75                    2044          rts
+00E9BAB8                          2045          
+00E9BAB8                          2046          ;d7 is CurHeight
+00E9BAB8                          2047          ;d6 is CurWidth
+00E9BAB8                          2048          ;d5 is ColorIndexStart
+00E9BAB8                          2049          ;d4 is TotalWidth
+00E9BAB8                          2050          ;d3 is YLocation for function
+00E9BAB8                          2051          ;d2 is XLocation for function
+00E9BAB8                          2052          ;d1 is Color for function
+00E9BAB8                          2053          ;d0 gets eaten by the function
+00E9BAB8                          2054          
+00E9BAB8                          2055          ;a0 is current pixel index loc
+00E9BAB8                          2056          ;a1 is used to store/pull color from
+00E9BAB8                          2057          ;a4 is ONE TIME data gather
+00E9BAB8                          2058  colorPalleteBmp:
+00E9BAB8  2879 00F7CB8C           2059          move.l  bmpAddr, a4
+00E9BABE  4245                    2060          clr d5
+00E9BAC0  1A3C 000E               2061          move.b  #BMP_HEADER_SIZE,d5
+00E9BAC4  DA2C 000E               2062          add.b   BMP_HEADER_SIZE(a4),d5
+00E9BAC8                          2063          
+00E9BAC8                          2064  colorPalleteLoop:
+00E9BAC8  4241                    2065          clr     d1        
+00E9BACA  1218                    2066          move.b  (a0)+,d1
+00E9BACC  E549                    2067          lsl     #2,d1
+00E9BACE  D285                    2068          add.l   d5,d1           ;Adding Color Index
+00E9BAD0  D2B9 00F7CB8C           2069          add.l   (bmpAddr),d1   ;Adding File Location Start
+00E9BAD6  2241                    2070          move.l  d1,a1
+00E9BAD8  2211                    2071          move.l  (a1),d1
+00E9BADA  E089                    2072          lsr.l   #8,d1
+00E9BADC                          2073  
+00E9BADC  4EB9 00E9BB06           2074          jsr drawPixel
+00E9BAE2  5282                    2075          add.l   #1,d2
+00E9BAE4  B5C2                    2076          cmp.l   d2,a2
+00E9BAE6  66E0                    2077          bne colorPalleteLoop
+00E9BAE8                          2078          
+00E9BAE8  91F9 00F7CB84           2079          sub.l   xDrawSize,a0
+00E9BAEE  D1F9 00F7CB70           2080          add.l   rowSizeInBytes,a0
+00E9BAF4  2439 00F7CB74           2081          move.l  xMainDraw,d2
+00E9BAFA  5383                    2082          sub.l   #1,d3
+00E9BAFC  B6B9 00F7CB78           2083          cmp.l   yMainDraw,d3
+00E9BB02  66C4                    2084          bne colorPalleteLoop
+00E9BB04  4E75                    2085          rts
+00E9BB06                          2086          
+00E9BB06                          2087          *Mangles D0,D1
+00E9BB06                          2088          *Keeps D2,D3 safe
+00E9BB06                          2089          *D1 Should be the color
+00E9BB06                          2090          *D2 should be x loc
+00E9BB06                          2091          *D3 should be y loc
+00E9BB06                          2092  drawPixel:
+00E9BB06  7050                    2093          move.l #PEN_COLOR_TRAP_CODE, d0
+00E9BB08  4E4F                    2094          trap #15
+00E9BB0A                          2095          
+00E9BB0A  7052                    2096          move.l #DRAW_PIXEL_TRAP_CODE,d0
+00E9BB0C  2202                    2097          move.l d2,d1
+00E9BB0E  2403                    2098          move.l d3,d2
+00E9BB10  4E4F                    2099          trap    #15
+00E9BB12                          2100          
+00E9BB12  2602                    2101          move.l d2,d3
+00E9BB14  2401                    2102          move.l d1,d2
+00E9BB16                          2103  
+00E9BB16  4E75                    2104          rts
+00E9BB18                          2105  
+00E9BB18                          2106  
+00E9BB18                          2107  fromLittleEndToBigEnd:
+00E9BB18  E159                    2108       rol.w   #8,d1
+00E9BB1A  4841                    2109       swap    d1
+00E9BB1C  E159                    2110       rol.w   #8,d1
+00E9BB1E  4E75                    2111       rts
+00E9BB20                          2112          
+00E9BB20                          2113  ;end:
+00E9BB20                          2114          ;movem.l (sp)+,ALL_REG
+00E9BB20                          2115          ;move.b  $9,d0
+00E9BB20                          2116          ;TRAP #15       
+00E9BB20                          2117          ;STOP #$2000
+00E9BB20                          2118  BmpToDraw:      INCBIN "level1.bmp"
+00F7CB58                          2119  
+00F7CB58                          2120  
+00F7CB58= 0000                    2121  bitsPerPixel        dc.w    0
+00F7CB5A= 00000000                2122  palleteSize         dc.l    0
+00F7CB5E= 00000000                2123  imageDataOffset     dc.l    0
+00F7CB62= 00000000                2124  imageWidth          dc.l    0
+00F7CB66= 00000000                2125  imageHeight         dc.l    0
+00F7CB6A= 00                      2126  rowOffset           dc.b    0
+00F7CB6C= 00000000                2127  colorIndexOffset    dc.l    0
+00F7CB70= 00000000                2128  rowSizeInBytes      dc.l    0
+00F7CB74                          2129  
+00F7CB74= 00000000                2130  xMainDraw           dc.l    0
+00F7CB78= 00000000                2131  yMainDraw           dc.l    0
+00F7CB7C= 00000000                2132  xBmpDrawLoc         dc.l    0
+00F7CB80= 00000000                2133  yBmpDrawLoc         dc.l    0
+00F7CB84= 00000000                2134  xDrawSize           dc.l    0
+00F7CB88= 00000000                2135  yDrawSize           dc.l    0
+00F7CB8C                          2136  
+00F7CB8C= 00000000                2137  bmpAddr             dc.l    0
+00F7CB90                          2138  
+00F7CB90                          2139  
+00F7CB90                          2140  
+00F7CB90                          2141  
+00F7CB90                          2142  
+00F7CB90                          2143  
+00F7CB90                          2144  
+00F7CB90                          2145  
+00F7CB90                          2146  
+00F7CB90                          2147  
+00F7CB90                          2148  
+00F7CB90                          2149  
+00F7CB90                          2150  
+00F7CB90                          2151  
+00F7CB90                          2152  
+00F7CB90                          2153  
+00F7CB90                          2154  
+00F7CB90                          2155  
+00F7CB90                          2156  
+00F7CB90                          2157  
+00F7CB90                          2158  
+00F7CB90                          2159  
+00F7CB90                          2160  
+00F7CB90                          2161  
+00F7CB90                          2162  
+00F7CB90                          2163  
+00F7CB90                          2164  
+00F7CB90                          2165  -------------------- end include --------------------
+00F7CB90                          2166      INCLUDE "randomNumbers.x68"
+00F7CB90                          2167  ALL_REG                 REG     D0-D7/A0-A6
+00F7CB90                          2168  
+00F7CB90  =00000008               2169  GET_TIME_COMMAND        equ     8
+00F7CB90                          2170  
+00F7CB90                          2171  
+00F7CB90                          2172  
+00F7CB90  4EB9 00F7CBD4           2173          jsr     seedRandomNumber
+00F7CB96  4286                    2174      clr.l   d6
+00F7CB98  4EB9 00F7CBEC           2175          jsr     getRandomByteIntoD6
+00F7CB9E  4286                    2176      clr.l   d6
+00F7CBA0  4EB9 00F7CBEC           2177          jsr     getRandomByteIntoD6
+00F7CBA6  4286                    2178      clr.l   d6
+00F7CBA8  4EB9 00F7CBEC           2179          jsr     getRandomByteIntoD6
+00F7CBAE  4286                    2180      clr.l   d6
+00F7CBB0  4EB9 00F7CBEC           2181          jsr     getRandomByteIntoD6
+00F7CBB6  4286                    2182      clr.l   d6
+00F7CBB8  4EB9 00F7CBEC           2183          jsr     getRandomByteIntoD6
+00F7CBBE  4286                    2184      clr.l   d6
+00F7CBC0  4EB9 00F7CBEC           2185          jsr     getRandomByteIntoD6
+00F7CBC6  4286                    2186      clr.l   d6
+00F7CBC8  4EB9 00F7CC26           2187          jsr     getRandomLongIntoD6
+00F7CBCE                          2188  
+00F7CBCE                          2189          
+00F7CBCE  103C 0009               2190          move.b  #9,d0
+00F7CBD2  4E4F                    2191          TRAP    #15
+00F7CBD4                          2192  
+00F7CBD4                          2193  
+00F7CBD4                          2194  
+00F7CBD4                          2195  seedRandomNumber
+00F7CBD4  48E7 FFFE               2196          movem.l ALL_REG,-(sp)
+00F7CBD8  4286                    2197          clr.l   d6
+00F7CBDA  103C 0008               2198          move.b  #GET_TIME_COMMAND,d0
+00F7CBDE  4E4F                    2199          TRAP    #15
+00F7CBE0                          2200  
+00F7CBE0  23C1 00F7CC62           2201          move.l  d1,RANDOMVAL
+00F7CBE6  4CDF 7FFF               2202          movem.l (sp)+,ALL_REG
+00F7CBEA  4E75                    2203          rts
+00F7CBEC                          2204  
+00F7CBEC                          2205  getRandomByteIntoD6
+00F7CBEC  48E7 8000               2206          movem.l d0,-(sp)
+00F7CBF0  48E7 4000               2207          movem.l d1,-(sp)
+00F7CBF4  48E7 2000               2208          movem.l d2,-(sp)
+00F7CBF8  2039 00F7CC62           2209          move.l  RANDOMVAL,d0
+00F7CBFE  72AF                    2210          moveq   #$AF-$100,d1
+00F7CC00  7412                    2211          moveq   #18,d2
+00F7CC02                          2212  Ninc0   
+00F7CC02  D080                    2213      add.l   d0,d0
+00F7CC04  6400 0004               2214      bcc Ninc1
+00F7CC08  B300                    2215      eor.b   d1,d0
+00F7CC0A                          2216  Ninc1
+00F7CC0A  51CA FFF6               2217      dbf d2,Ninc0
+00F7CC0E                          2218      
+00F7CC0E  23C0 00F7CC62           2219      move.l  d0,RANDOMVAL
+00F7CC14  4286                    2220      clr.l   d6
+00F7CC16  1C00                    2221      move.b  d0,d6
+00F7CC18                          2222      
+00F7CC18  4CDF 0004               2223          movem.l (sp)+,d2
+00F7CC1C  4CDF 0002               2224          movem.l (sp)+,d1
+00F7CC20  4CDF 0001               2225          movem.l (sp)+,d0
+00F7CC24  4E75                    2226          rts
+00F7CC26                          2227          
+00F7CC26                          2228  
+00F7CC26                          2229  getRandomLongIntoD6
+00F7CC26  48E7 FFFE               2230          movem.l ALL_REG,-(sp)
+00F7CC2A  4EB9 00F7CBEC           2231          jsr     getRandomByteIntoD6
+00F7CC30  1A06                    2232          move.b  d6,d5
+00F7CC32  4EB9 00F7CBEC           2233          jsr     getRandomByteIntoD6
+00F7CC38  E18D                    2234          lsl.l   #8,d5
+00F7CC3A  1A06                    2235          move.b  d6,d5
+00F7CC3C  4EB9 00F7CBEC           2236          jsr     getRandomByteIntoD6
+00F7CC42  E18D                    2237          lsl.l   #8,d5
+00F7CC44  1A06                    2238          move.b  d6,d5
+00F7CC46  4EB9 00F7CBEC           2239          jsr     getRandomByteIntoD6
+00F7CC4C  E18D                    2240          lsl.l   #8,d5
+00F7CC4E  1A06                    2241          move.b  d6,d5
+00F7CC50  23C5 00F7CC66           2242          move.l  d5,TEMPRANDOMLONG
+00F7CC56  4CDF 7FFF               2243          movem.l (sp)+,ALL_REG
+00F7CC5A  2C39 00F7CC66           2244          move.l  TEMPRANDOMLONG,d6
+00F7CC60  4E75                    2245          rts
+00F7CC62                          2246  
+00F7CC62                          2247  
+00F7CC62                          2248  RANDOMVAL       ds.l    1
+00F7CC66                          2249  TEMPRANDOMLONG  ds.l    1
+00F7CC6A                          2250  
+00F7CC6A                          2251  
+00F7CC6A                          2252  
+00F7CC6A                          2253  
+00F7CC6A                          2254  
+00F7CC6A                          2255  
+00F7CC6A                          2256  
+00F7CC6A                          2257  -------------------- end include --------------------
+00F7CC6A                          2258      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ALL_REG             7FFF
+ASTEROIDS           2644
+ASTEROIDSPERLEVEL   28F2
+ASTEROID_HEALTH     10
+ASTEROID_SIZE_IN_MEMORY  14
+ASTEROID_X          0
+ASTEROID_X_VELOCITY  8
+ASTEROID_Y          4
+ASTEROID_Y_VELOCITY  C
+A_ASTEROIDSIZE      28
+A_ASTEROID_HEALTH   5
+A_BULLET_COUNT_X    10E
+A_BULLET_COUNT_Y    2D
+A_BULLET_SPEED      200
+A_CIRCLE_SPEED      1A0
+A_FINAL_SCORE_X     15E
+A_FINAL_SCORE_Y     119
+A_HALF_ASTEROIDSIZE  14
+A_PLAY_X_END        278
+A_PLAY_X_END_OFFSET  26C
+A_PLAY_X_SIZE       234
+A_PLAY_X_START      44
+A_PLAY_X_START_OFFSET  4A
+A_PLAY_Y_END        1D9
+A_PLAY_Y_END_OFFSET  1CD
+A_PLAY_Y_SIZE       180
+A_PLAY_Y_START      59
+A_PLAY_Y_START_OFFSET  5F
+A_SCORE_X           1E5
+A_SCORE_Y           2D
+A_SCREEN_X_SIZE     280
+A_SCREEN_Y_SIZE     1E0
+A_THRESHOLD_X       163
+A_THRESHOLD_Y       2D
+A_VACUUM_OFFSET     B4
+BITSPERPIXEL        F7CB58
+BLACK               0
+BLUE                FF0000
+BMPADDR             F7CB8C
+BMPTODRAW           E9BB20
+BMP_HEADER_SIZE     E
+BULLET              2550
+BULLETSPEED         263A
+BULLETUPDATELOOP    1160
+BULLET_COUNT        7
+BULLET_SIZE_IN_MEMORY  8
+BULLET_X            0
+BULLET_Y            4
+B_ASTEROIDSIZE      24
+B_ASTEROID_HEALTH   6
+B_BULLET_COUNT_X    294
+B_BULLET_COUNT_Y    1EF
+B_BULLET_SPEED      300
+B_CIRCLE_SPEED      200
+B_FINAL_SCORE_X     122
+B_FINAL_SCORE_Y     121
+B_HALF_ASTEROIDSIZE  12
+B_PLAY_X_END        244
+B_PLAY_X_END_OFFSET  238
+B_PLAY_X_SIZE       244
+B_PLAY_X_START      0
+B_PLAY_X_START_OFFSET  6
+B_PLAY_Y_END        242
+B_PLAY_Y_END_OFFSET  236
+B_PLAY_Y_SIZE       242
+B_PLAY_Y_START      0
+B_PLAY_Y_START_OFFSET  6
+B_SCORE_X           29C
+B_SCORE_Y           4B
+B_SCREEN_X_SIZE     2D0
+B_SCREEN_Y_SIZE     242
+B_THRESHOLD_X       26C
+B_THRESHOLD_Y       4B
+B_VACUUM_OFFSET     74
+CHANGEMAPIFNECESSARY  1CDE
+CHANGEMAPIFNECESSARY:NOLEVELS  1DCC
+CHANGEMAPIFNECESSARY:TRYLEVEL2  1D1E
+CHANGEMAPIFNECESSARY:TRYLEVEL3  1D58
+CHANGEMAPIFNECESSARY:TRYLEVEL4  1D92
+CHECKASTEROIDLOOP   1764
+CHECKBULLETLOOP     1788
+CHECKFORASTEROIDBULLETCOLLISION  174A
+CHECKFORLEVELEND    1A46
+CHECKFORLEVELEND:ASTCHECKLOOP  1A4E
+CHECKFORLEVELEND:FINISHGAMESTATE  1AC6
+CHECKFORLEVELEND:GAMESNOTOVER  1ADC
+CHECKFORLEVELEND:LOSESTATE  1A76
+CHECKFORLEVELEND:WINSTATE  1A94
+CIRCLESPEED         2546
+CIRCLEVELOCITY      253E
+CIRCLEXLOCATION     2536
+CIRCLEYLOCATION     253A
+CIRCLE_SIZE         C
+COLORINDEXOFFSET    F7CB6C
+COLORPALLETEBMP     E9BAB8
+COLORPALLETELOOP    E9BAC8
+CURASTEROIDGRAVITY  282A
+CURASTEROIDSIZE     2824
+CURBULLETXPOWER     2632
+CURBULLETYPOWER     2636
+CURCOUNTERCOLOR     28BC
+CURCOUNTEROFFCOLOR  28C0
+CURDRAWASTEROIDFUNCTION  E9B874
+CURDRAWSHIPFUNCTION  E9B870
+CURENDLOCATIONX     E9B88C
+CURENDLOCATIONY     E9B890
+CURHALFASTEROIDSIZE  2826
+CURHIT              E9B87C
+CURLOST             E9B888
+CURMUSIC            E9B878
+CURRENTBULLETS      28D4
+CURRENTBULLETSX     28D8
+CURRENTBULLETSY     28DC
+CURRENTLEVEL        28EE
+CURRENTSCORE        28C4
+CURRENTSCOREX       28C8
+CURRENTSCOREY       28CC
+CURRENTTHRESHOLDX   28E4
+CURRENTTHRESHOLDY   28E8
+CURRENTVACUUMLINECOLOR  295E
+CURRENTVACUUMLINEX  295A
+CURSHOOT            E9B880
+CURWIN              E9B884
+C_ASTEROIDSIZE      20
+C_ASTEROID_HEALTH   7
+C_BULLET_COUNT_X    19
+C_BULLET_COUNT_Y    2D0
+C_BULLET_SPEED      380
+C_CIRCLE_SPEED      240
+C_FINAL_SCORE_X     24B
+C_FINAL_SCORE_Y     180
+C_HALF_ASTEROIDSIZE  10
+C_PLAY_X_END        400
+C_PLAY_X_END_OFFSET  3F4
+C_PLAY_X_SIZE       36A
+C_PLAY_X_START      96
+C_PLAY_X_START_OFFSET  9C
+C_PLAY_Y_END        300
+C_PLAY_Y_END_OFFSET  2F4
+C_PLAY_Y_SIZE       300
+C_PLAY_Y_START      0
+C_PLAY_Y_START_OFFSET  6
+C_SCORE_X           78
+C_SCORE_Y           2D0
+C_SCREEN_X_SIZE     400
+C_SCREEN_Y_SIZE     300
+C_THRESHOLD_X       46
+C_THRESHOLD_Y       2D0
+C_VACUUM_OFFSET     144
+DARKBLUE            5E0E00
+DARKGREEN           E3E00
+DARKYELLOW          3F34
+DELAY_TIME_TRAP_CODE  17
+DELTATIME           2642
+DELTATIMENOTZERO    1420
+DISPLAYENDBMP       1BF0
+DONEWITHOFFSET      E9B9AE
+DONTDRAWTHISBULLET  11E0
+DONTMOVE            1324
+DONTNEGATEX         12FA
+DONTNEGATEY         1310
+DONTNUKEVEL         1728
+DONTREVERSEASTEROIDY  16B4
+DONTREVERSEASTEROIDY2  16FA
+DONTSPAWNBULLET     1458
+DRAWASTEROIDS       1556
+DRAWASTEROIDS:CONTINUELOOP  1586
+DRAWASTEROIDS:LOOP  155E
+DRAWBMP             E9B8E8
+DRAWBUFFERTOSCREEN  1492
+DRAWBULLETCOUNT     18DE
+DRAWBULLETEND       11EC
+DRAWBULLETLOOP      11B8
+DRAWBULLETS         11A6
+DRAWELEMENTS        109A
+DRAWFINALSCREEN     1B80
+DRAWLEVEL2ASTEROIDS  1592
+DRAWLEVEL2ASTEROIDS:CONTINUELOOP  15C2
+DRAWLEVEL2ASTEROIDS:LOOP  159A
+DRAWLEVEL2SHIP      1344
+DRAWLEVEL3ASTEROIDS  15CE
+DRAWLEVEL3ASTEROIDS:CONTINUELOOP  1632
+DRAWLEVEL3ASTEROIDS:LOOP  15D6
+DRAWLEVEL3SHIP      13AA
+DRAWPIXEL           E9BB06
+DRAWPIXELS          E9BA76
+DRAWSCORE           1958
+DRAWSEVENSEGMENT    1810
+DRAWSEVENSEGMENT:DRAWSEGMENT  1882
+DRAWSEVENSEGMENT:LOOP  184C
+DRAWSEVENSEGMENT:PENISMAROON  185A
+DRAWSEVENSEGMENT:PENISRED  186E
+DRAWSHIP            1326
+DRAWTHRESHOLDCOUNT  1914
+DRAWTOTALSCORE      1B1E
+DRAWVACUUMLINE      198E
+DRAW_ELLIPSE_TRAP_CODE  5B
+DRAW_FILLED_ELLIPSE_TRAP_CODE  58
+DRAW_FILLED_RECT_TRAP_CODE  57
+DRAW_PIXEL_TRAP_CODE  52
+DRAW_TO_SCREEN_TRAP_CODE  5E
+D_ASTEROIDSIZE      1E
+D_ASTEROID_HEALTH   8
+D_BULLET_COUNT_X    4C4
+D_BULLET_COUNT_Y    258
+D_BULLET_SPEED      400
+D_CIRCLE_SPEED      280
+D_FINAL_SCORE_X     2DD
+D_FINAL_SCORE_Y     168
+D_HALF_ASTEROIDSIZE  F
+D_PLAY_X_END        4D4
+D_PLAY_X_END_OFFSET  4C8
+D_PLAY_X_SIZE       3EE
+D_PLAY_X_START      E6
+D_PLAY_X_START_OFFSET  EC
+D_PLAY_Y_END        2D0
+D_PLAY_Y_END_OFFSET  2C4
+D_PLAY_Y_SIZE       2D0
+D_PLAY_Y_START      0
+D_PLAY_Y_START_OFFSET  6
+D_SCORE_X           4C4
+D_SCORE_Y           2D
+D_SCREEN_X_SIZE     500
+D_SCREEN_Y_SIZE     2D0
+D_THRESHOLD_X       4C4
+D_THRESHOLD_Y       163
+D_VACUUM_OFFSET     1AF
+ENABLE_DOUBLE_BUFFER_CODE  11
+END                 24AA
+ERASETOTALSCORE     1ADE
+FINALHIT            2528
+FINALLOSE           251A
+FINALMUSIC          24EF
+FINALSHOOT          24FE
+FINALWIN            250D
+FINAL_HIT           8
+FINAL_LOSE          A
+FINAL_MUSIC         6
+FINAL_SHOOT         7
+FINAL_WIN           9
+FINDEMPTYBULLETSPACELOOP  110A
+FINISHBULLETSPAWN   1156
+FROMLITTLEENDTOBIGEND  E9BB18
+FULL_SCREEN_SETTING_NUM  2
+GETRANDOMBYTEINTOD6  F7CBEC
+GETRANDOMLONGINTOD6  F7CC26
+GET_MOUSE_LOC_TRAP_CODE  3D
+GET_TIME_COMMAND    8
+GET_TIME_TRAP_CODE  8
+GREEN               FF00
+GREY                666666
+HALFCIRCLESIZE      2542
+IMAGEDATAOFFSET     F7CB5E
+IMAGEHEIGHT         F7CB66
+IMAGEWIDTH          F7CB62
+INCREMENTLEVEL      1A22
+INCREMENTSCORECOUNTER  194A
+ISLEVELOVER         28EC
+LASTITERTIME        263E
+LEVEL1BMP           7A7B60
+LEVEL1X             293A
+LEVEL1Y             293E
+LEVEL2BMP           888B98
+LEVEL2X             2942
+LEVEL2Y             2946
+LEVEL3BMP           9B87D0
+LEVEL3X             294A
+LEVEL3Y             294E
+LEVEL4BMP           BF8808
+LEVEL4X             2952
+LEVEL4Y             2956
+LEVELASTEROIDHEALTH  282E
+LEVELTHRESHOLDS     2916
+LOADLEVELPRESETS    1E10
+LOADLEVELPRESETS:PRESETSLOADED  2334
+LOADLEVELPRESETS:TRYLEVEL3  1F78
+LOADLEVELPRESETS:TRYLEVEL6  20D0
+LOADLEVELPRESETS:TRYLEVEL8  220C
+LOADSCREEN          1C60
+LOADSCREEN00        3A2C04
+LOADSCREEN80        E3998
+LOADSCREEN90        2432CE
+LOADSCREEN:DISPLAYSCREEN  1CC2
+LOADSCREEN:LOADSCREEN00  1CAE
+LOADSCREEN:LOADSCREEN80  1C7A
+LOADSCREEN:LOADSCREEN90  1C94
+LOADSOUND           24A4
+LOADSOUNDS          2408
+LOOP                1030
+MAIN                E9B8A2
+MAROON              E003E
+MAX_ASTEROID_COUNT  6
+MOUSEDOWN           254E
+MOUSEXLOCATION      254A
+MOUSEYLOCATION      254C
+NEXTASTEROIDCHECKITER  1802
+NEXTASTEROIDDRAWITER  173C
+NEXTBULLETCHECKITER  17FC
+NEXTBULLETDRAWITER  11E6
+NEXTFINDEMPTYBULLETLOOPITER  1150
+NINC0               F7CC02
+NINC1               F7CC0A
+NOPALLETEFUNCTIONBRANCH  E9BA6A
+NOT_FULL_SCREEN_SETTING_NUM  1
+NUKEASTEROIDS       19C4
+NUKEASTEROIDS:ASTEROIDNUKELOOP  19CC
+NUKEBULLETS         19AC
+NUKEBULLETS:BULLETNUKELOOP  19B4
+ODDBITFIXER         28ED
+OUTPUT_WINDOW_TRAP_CODE  21
+PALLETEFUNCTIONBRANCH  E9BA5E
+PALLETESIZE         F7CB5A
+PEN_COLOR_TRAP_CODE  50
+PLAYHIT             23D4
+PLAYHIT:NOSOUND     23E6
+PLAYLOSE            23BC
+PLAYLOSE:NOSOUND    23CE
+PLAYSHOOT           238C
+PLAYSHOOT:NOSOUND   239E
+PLAYWIN             23A4
+PLAYWIN:NOSOUND     23B6
+PLAYXEND            E9B860
+PLAYXENDOFFSET      E9B868
+PLAYXSIZE           E9B858
+PLAYXSTART          E9B848
+PLAYXSTARTOFFSET    E9B850
+PLAYYEND            E9B864
+PLAYYENDOFFSET      E9B86C
+PLAYYSIZE           E9B85C
+PLAYYSTART          E9B84C
+PLAYYSTARTOFFSET    E9B854
+POINTSTHRESHOLD     28E0
+PRINTBACKGROUND     1DCE
+RANDOMVAL           F7CC62
+RED                 FF
+REMOVEASTEROIDS     151A
+REMOVEASTEROIDS:CONTINUELOOP  154A
+REMOVEASTEROIDS:LOOP  1522
+REMOVEBULLETEND     1218
+REMOVEBULLETLOOP    11F6
+REMOVEBULLETS       11EE
+REMOVECIRCLE        1460
+REMOVEELEMENTS      1058
+RESETCIRCLELOCATION  1220
+RESETGAME           19F0
+RESETSCORE          19E0
+ROWOFFSET           F7CB6A
+ROWSIZEINBYTES      F7CB70
+SAVENEWBULLETLOC    119A
+SCREENSEGMENTXLOC   28B4
+SCREENSEGMENTYLOC   28B8
+SCREENXSIZE         E9B840
+SCREENYSIZE         E9B844
+SEEDRANDOMNUMBER    F7CBD4
+SEGMENTCENTERX      28AC
+SEGMENTCENTERY      28B0
+SEGMENTENDXLOCS     2858
+SEGMENTENDYLOCS     2890
+SEGMENTSTARTXLOCS   283C
+SEGMENTSTARTYLOCS   2874
+SETDOUBLEBUFFERMODE  148A
+SETFILLCOLOR        1484
+SETPENCOLOR         147E
+SET_DRAW_MODE_TRAP_CODE  5C
+SET_FILL_COLOR_TRAP_CODE  51
+SET_PEN_COLOR_TRAP_CODE  50
+SEVENSEGMENTLIST    2832
+SFHIT               24E5
+SFLOSE              24CE
+SFMUSIC             24D9
+SFWIN               24C4
+SF_HIT              5
+SF_LOSE             4
+SF_MUSIC            2
+SF_WIN              3
+SIHIT               24BA
+SISHOOTSOUND        24AE
+SI_HIT              B
+SI_SHOOT            1
+SPAWNASTEROID       14E0
+SPAWNASTEROID:CONTINUELOOP  150E
+SPAWNASTEROID:LOOP  14E8
+SPAWNASTEROID:SPAWNEDASTEROID  1518
+SPAWNBULLET         2630
+SPAWNBULLETIFPOSSIBLE  10F4
+SPAWNRANDOMASTEROID  1498
+START               1000
+STARTLEVEL          2336
+STARTLEVEL:SPAWNASTS  236C
+STARTMUSIC          23EC
+STARTMUSIC:NOSOUND  23F8
+STOPMUSIC           23FA
+STOPMUSIC:NOSOUND   2406
+TEMPRANDOMLONG      F7CC66
+TITLESCREEN         2962
+TOTALSCORE          28D0
+UPDATEASTEROIDLOCATION  163E
+UPDATEASTEROIDLOOP  1646
+UPDATEBULLETLOCATION  1158
+UPDATEBULLETNEXTITER  119E
+UPDATECIRCLELOCATION  1246
+UPDATECIRCLELOCATION:NOTOUTOFX  126A
+UPDATECIRCLELOCATION:NOTOUTOFXU  1284
+UPDATECIRCLELOCATION:NOTOUTOFY  12A4
+UPDATECIRCLELOCATION:NOTOUTOFYU  12BA
+UPDATECIRCLELOCATION:VALIDXCHECK  12D6
+UPDATECIRCLELOCATION:VALIDYCHECK  12E0
+UPDATECIRCLELOCATION:XADJDONE  1286
+UPDATECIRCLELOCATION:YADJDONE  12BC
+UPDATEELEMENTS      107A
+UPDATEINPUT         1428
+UPDATETIMESINCELASTLOOP  1408
+USECHUNK            E9B9EC
+WAITFORCLICK        1CCE
+WAITFORCLICK:WAIT4CLICK  1CCE
+WHITE               FFFFFF
+XBMPDRAWLOC         F7CB7C
+XDRAWSIZE           F7CB84
+XMAINDRAW           F7CB74
+X_BMP_DRAW_LOC      FF
+X_DRAW_SIZE         64
+X_MAIN_DRAW         0
+YBMPDRAWLOC         F7CB80
+YDRAWSIZE           F7CB88
+YELLOW              F2FF
+YMAINDRAW           F7CB78
+YOULOSEBMP          7A6868
+YOUWINBMP           50253A
+YOUWINFINALBMP      503832
+Y_BMP_DRAW_LOC      A
+Y_DRAW_SIZE         64
+Y_MAIN_DRAW         0
